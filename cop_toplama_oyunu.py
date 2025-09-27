@@ -24,9 +24,9 @@ KARE_BOYUT = 30
 
 # Hız/zorluk seçenekleri (oyun hızı, düşük = daha yavaş hareket)
 HIZLAR = {
-    'Kolay': 8,    # Daha yavaş hareket (saniyede 8 hareket)
-    'Orta': 12,    # Normal hareket hızı (saniyede 12 hareket)  
-    'Zor': 18      # Hızlı hareket (saniyede 18 hareket)
+    'Kolay': 4,    # Daha yavaş hareket (saniyede 4 hareket)
+    'Orta': 8,     # Normal hareket hızı (saniyede 8 hareket)  
+    'Zor': 12      # Hızlı hareket (saniyede 12 hareket)
 }
 FPS = 60  # Ekran yenileme hızı (akıcılık için yüksek tutulmalı)
 
@@ -110,8 +110,14 @@ class CopToplayici:
 class Cop:
     def __init__(self):
         # UI yazılarının olduğu alanları hariç tut (üst 45 piksel)
-        self.x = random.randint(0, (PENCERE_GENISLIK // KARE_BOYUT) - 1) * KARE_BOYUT
-        self.y = random.randint(3, (PENCERE_YUKSEKLIK // KARE_BOYUT) - 1) * KARE_BOYUT  # En az 60 piksel aşağıdan başla
+        # Ayrıca kenar alanları da hariç tut (ulaşılabilir olmayan yerler)
+        min_x = 1  # Sol kenarda 1 kare boşluk
+        max_x = (PENCERE_GENISLIK // KARE_BOYUT) - 2  # Sağ kenarda 1 kare boşluk
+        min_y = 3  # UI alanından sonra
+        max_y = (PENCERE_YUKSEKLIK // KARE_BOYUT) - 2  # Alt kenarda 1 kare boşluk
+        
+        self.x = random.randint(min_x, max_x) * KARE_BOYUT
+        self.y = random.randint(min_y, max_y) * KARE_BOYUT
         
         # Rastgele çöp türü seç
         cop_turleri = ['apple', 'banana', 'bottle', 'landfill']
@@ -288,28 +294,34 @@ def main():
                 frame_sayac += 1
                 
                 # Hareket kontrolü - sadece belirli frame aralıklarında hareket et
+                hareket_zamani = False
                 if frame_sayac >= (60 // oyun_hizi):  # 60 FPS bazında hareket hızı
                     frame_sayac = 0
+                    hareket_zamani = True
                     
                     # Hareketten önce kuyruğu sakla (büyüme için)
                     eski_kuyruk = toplayici.kareler[-1]
                     toplayici.hareket_et()
-                    
-                    # Hareket sonrası çarpışma kontrolleri
-                    bas_x, bas_y = toplayici.kareler[0]
-                    
-                    # Debug: pozisyonları yazdır (geçici)
-                    # print(f"Karakter: ({bas_x}, {bas_y}), Çöp: ({cop.x}, {cop.y})")
-                    
-                    # Çöp yeme kontrolü
-                    if bas_x == cop.x and bas_y == cop.y:
-                        # Büyüme: eski kuyruğu geri ekle
+                
+                # Her frame'de çarpışma kontrolü (çok önemli!)
+                bas_x, bas_y = toplayici.kareler[0]
+                
+                # Çöp yeme kontrolü - TOLERANCE ile (daha güvenilir)
+                carpisma_var = (abs(bas_x - cop.x) <= KARE_BOYUT//2) and (abs(bas_y - cop.y) <= KARE_BOYUT//2)
+                
+                if carpisma_var:
+                    if hareket_zamani:
+                        # Hareket frame'inde: eski kuyruk ile büyü
                         toplayici.kareler.append(eski_kuyruk)
-                        skor += 1
-                        cop = Cop()  # Yeni çöp oluştur
-                        # print(f"Çöp yenildi! Skor: {skor}")  # Debug
+                    else:
+                        # Diğer frame'lerde: son kare ile büyü
+                        toplayici.kareler.append(toplayici.kareler[-1])
                     
-                    # Kendine çarpma kontrolü
+                    skor += 1
+                    cop = Cop()  # Yeni çöp oluştur
+                
+                # Kendine çarpma kontrolü - sadece hareket frame'inde
+                if hareket_zamani:
                     if toplayici.carpisma_kontrolu():
                         oyun_bitti = True
 
