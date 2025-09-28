@@ -36,21 +36,25 @@ pygame.display.set_caption("Çöp Toplama Oyunu")
 saat = pygame.time.Clock()
 
 
-# Görselleri yükle
-insan_sprite = pygame.image.load("insan.png")
+# Görselleri yükle (assets klasöründen)
+insan_sprite = pygame.image.load("assets/insan.png")
 insan_sprite = pygame.transform.scale(insan_sprite, (KARE_BOYUT, KARE_BOYUT))
-cop_sprite = pygame.image.load("cop.png")
+cop_sprite = pygame.image.load("assets/cop.png")
 cop_sprite = pygame.transform.scale(cop_sprite, (KARE_BOYUT, KARE_BOYUT))
 
 # Çeşitli çöp türleri için sprite'lar
-apple_sprite = pygame.image.load("apple.png")
+apple_sprite = pygame.image.load("assets/apple.png")
 apple_sprite = pygame.transform.scale(apple_sprite, (KARE_BOYUT, KARE_BOYUT))
-banana_sprite = pygame.image.load("banana.png")
+banana_sprite = pygame.image.load("assets/banana.png")
 banana_sprite = pygame.transform.scale(banana_sprite, (KARE_BOYUT, KARE_BOYUT))
-bottle_sprite = pygame.image.load("bottle.png")
+bottle_sprite = pygame.image.load("assets/bottle.png")
 bottle_sprite = pygame.transform.scale(bottle_sprite, (KARE_BOYUT, KARE_BOYUT))
-landfill_sprite = pygame.image.load("landfill.png")
+landfill_sprite = pygame.image.load("assets/landfill.png")
 landfill_sprite = pygame.transform.scale(landfill_sprite, (KARE_BOYUT, KARE_BOYUT))
+
+# Arkaplan görseli
+orman_arkaplan = pygame.image.load("assets/orman.png")
+orman_arkaplan = pygame.transform.scale(orman_arkaplan, (PENCERE_GENISLIK, PENCERE_YUKSEKLIK))
 
 # Font oluştur
 font = pygame.font.Font(None, 36)
@@ -135,6 +139,43 @@ class Cop:
     
     def ciz(self, ekran):
         ekran.blit(self.sprite, (self.x, self.y))
+
+def arkaplan_sec():
+    secenekler = ['Siyah', 'Orman']
+    secili = 0
+    while True:
+        ekran.fill(SIYAH)
+        baslik = font.render('Arkaplan Seç:', True, BEYAZ)
+        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 150))
+        ekran.blit(baslik, baslik_rect)
+        
+        for i, isim in enumerate(secenekler):
+            renk = SARI if i == secili else BEYAZ
+            y = 220 + i*50
+            secenek = font.render(isim, True, renk)
+            secenek_rect = secenek.get_rect(center=(PENCERE_GENISLIK//2, y))
+            ekran.blit(secenek, secenek_rect)
+        
+        # ESC ile çıkış bilgisi
+        cikis_bilgi = font.render("Çıkmak için ESC'ye bas", True, GRI)
+        cikis_rect = cikis_bilgi.get_rect(center=(PENCERE_GENISLIK//2, 450))
+        ekran.blit(cikis_bilgi, cikis_rect)
+        
+        pygame.display.flip()
+        for olay in pygame.event.get():
+            if olay.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if olay.type == pygame.KEYDOWN:
+                if olay.key == pygame.K_UP:
+                    secili = (secili - 1) % len(secenekler)
+                elif olay.key == pygame.K_DOWN:
+                    secili = (secili + 1) % len(secenekler)
+                elif olay.key == pygame.K_RETURN or olay.key == pygame.K_SPACE:
+                    return secenekler[secili]
+                elif olay.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
 def zorluk_sec():
     secenekler = list(HIZLAR.keys())
@@ -223,10 +264,6 @@ def bilgi_ekrani():
         sosyal_rect = sosyal.get_rect(center=(PENCERE_GENISLIK//2, 300))
         ekran.blit(sosyal, sosyal_rect)
         
-        # Buraya istediğin sosyal mesajı yazabilirsin
-        sosyal2 = font.render("TEMA HAKANI BAŞKAN SEÇ, VER YETKİYİ GÖR ETKİYİ!!!", True, YESIL)
-        sosyal2_rect = sosyal2.get_rect(center=(PENCERE_GENISLIK//2, 340))
-        ekran.blit(sosyal2, sosyal2_rect)
         
         basla = font.render("Başlamak için ENTER'a bas", True, MAVI)
         basla_rect = basla.get_rect(center=(PENCERE_GENISLIK//2, 380))
@@ -253,6 +290,7 @@ def main():
     global FPS
     while True:
         bilgi_ekrani()
+        secili_arkaplan = arkaplan_sec()  # Arkaplan seçimi
         oyun_hizi = zorluk_sec()  # Hareket hızı, FPS değil
         
         # Oyun döngüsü
@@ -325,7 +363,12 @@ def main():
                     if toplayici.carpisma_kontrolu():
                         oyun_bitti = True
 
-                ekran.fill(SIYAH)
+                # Arkaplanı çiz
+                if secili_arkaplan == 'Orman':
+                    ekran.blit(orman_arkaplan, (0, 0))
+                else:
+                    ekran.fill(SIYAH)
+                    
                 toplayici.ciz(ekran)
                 cop.ciz(ekran)
                 
