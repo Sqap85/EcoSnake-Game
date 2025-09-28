@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 EcoSnake Game - Çevre Koruma Temalı Yılan Oyunu
-Copyright (c) 2024 Sqap85
+Copyright (c) 2025 Sqap85
 
 Bu proje MIT lisansı altında yayınlanmıştır.
 Detaylar için LICENSE dosyasına bakınız.
