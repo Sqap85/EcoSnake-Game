@@ -42,8 +42,8 @@ KARE_BOYUT = 30
 # Hız/zorluk seçenekleri (oyun hızı, düşük = daha yavaş hareket)
 HIZLAR = {
     'Kolay': 4,    # Daha yavaş hareket (saniyede 4 hareket)
-    'Orta': 8,     # Normal hareket hızı (saniyede 8 hareket)  
-    'Zor': 12      # Hızlı hareket (saniyede 12 hareket)
+    'Orta': 9,     # Normal hareket hızı (saniyede 9 hareket)
+    'Zor': 15      # Hızlı hareket (saniyede 15 hareket)
 }
 FPS = 60  # Ekran yenileme hızı (akıcılık için yüksek tutulmalı)
 
