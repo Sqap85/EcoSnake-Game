@@ -93,9 +93,11 @@ GARBAGE_TURLERI = {
     'Siyah Poşet': garbage3_sprite
 }
 
-# Arkaplan görseli
+# Arkaplan görselleri
 orman_arkaplan = pygame.image.load("assets/orman.png")
 orman_arkaplan = pygame.transform.scale(orman_arkaplan, (PENCERE_GENISLIK, PENCERE_YUKSEKLIK))
+beach_arkaplan = pygame.image.load("assets/beach.png")
+beach_arkaplan = pygame.transform.scale(beach_arkaplan, (PENCERE_GENISLIK, PENCERE_YUKSEKLIK))
 
 # Font oluştur
 font = pygame.font.Font(None, 36)
@@ -376,12 +378,12 @@ def karakter_sec():
     while True:
         ekran.fill(SIYAH)
         
-        # Başlık - modern stil
+        # Başlık 
         baslik = buyuk_font.render('KARAKTER SEÇ', True, CYAN)
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
-        # Modern ayırıcı çizgi
+        #  ayırıcı çizgi
         pygame.draw.line(ekran, CYAN, (100, 110), (PENCERE_GENISLIK-100, 110), 3)
         
         # Karakterleri göster - daha düzenli
@@ -396,7 +398,7 @@ def karakter_sec():
             kutu_x = PENCERE_GENISLIK//2 - kutu_genislik//2
             kutu_rect = pygame.Rect(kutu_x, y-20, kutu_genislik, kutu_yukseklik)
             
-            # Modern karakter kutusu tasarımı
+            #  karakter kutusu tasarımı
             if secili_mi:
                 pygame.draw.rect(ekran, KOYU_GRI, kutu_rect, 0, 15)
                 pygame.draw.rect(ekran, CYAN, kutu_rect, 4, 15)
@@ -410,13 +412,13 @@ def karakter_sec():
             sprite_rect = buyuk_sprite.get_rect(center=(kutu_x + 80, y + 40))
             ekran.blit(buyuk_sprite, sprite_rect)
             
-            # Karakter ismi - modern renkler
+            # Karakter ismi 
             renk = CYAN if secili_mi else BEYAZ
             isim_text = font.render(isim, True, renk)
             isim_rect = isim_text.get_rect(center=(kutu_x + 280, y + 30))
             ekran.blit(isim_text, isim_rect)
             
-            # "AKTIF" yazısı - modern yeşil
+            # "AKTIF" yazısı 
             if isim == secili_karakter:  # Aktif karakter kontrolü
                 aktif_text = kucuk_font.render("AKTIF", True, NEON_YESIL)
                 aktif_rect = aktif_text.get_rect(center=(kutu_x + 280, y + 60))
@@ -468,13 +470,13 @@ def ana_menu():
             arkaplan_text = kucuk_font.render(f'Arkaplan: {secili_arkaplan}', True, BEYAZ)
             ekran.blit(arkaplan_text, (20, 60))
         
-        # Menü seçenekleri - modern gradient efekti
+        # Menü seçenekleri 
         menu_baslangic_y = 220
         for i, secenek in enumerate(secenekler):
             renk = SIYAH if i == secili else ACIK_GRI  # Seçili Siyah, diğerleri açık gri
             y = menu_baslangic_y + i * 60  # Daha ferah aralık
             
-            # Seçili seçenek için modern arka plan
+            # Seçili seçenek için arka plan
             if i == secili:
                 # Gradient benzeri efekt için çoklu dikdörtgen
                 pygame.draw.rect(ekran, KOYU_GRI, (220, y-25, PENCERE_GENISLIK-440, 50), 0, 12)
@@ -523,22 +525,22 @@ def ayarlar_menu():
     while True:
         ekran.fill(SIYAH)
         
-        # Başlık - modern stil
+        # Başlık
         baslik = buyuk_font.render('AYARLAR', True, CYAN)
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
-        # Modern ayırıcı çizgi - gradient efekti
+        #  ayırıcı çizgi - gradient efekti
         pygame.draw.line(ekran, CYAN, (100, 110), (PENCERE_GENISLIK-100, 110), 3)
         pygame.draw.line(ekran, KOYU_GRI, (100, 112), (PENCERE_GENISLIK-100, 112), 1)
         
-        # Menü seçenekleri - modern tasarım
+        # Menü seçenekleri -  tasarım
         menu_baslangic_y = 160  # Daha yukarıda
         for i, secenek in enumerate(secenekler):
             renk = BEYAZ if i == secili else ACIK_GRI  # Seçili beyaz, diğerleri açık gri
             y = menu_baslangic_y + i * 60  # Daha ferah aralık
             
-            # Modern seçili seçenek arka planı
+            #  seçili seçenek arka planı
             if i == secili:
                 pygame.draw.rect(ekran, KOYU_GRI, (220, y-25, PENCERE_GENISLIK-440, 50), 0, 10)
                 pygame.draw.rect(ekran, CYAN, (220, y-25, PENCERE_GENISLIK-440, 50), 3, 10)
@@ -579,7 +581,7 @@ def ayarlar_menu():
 
 def arkaplan_sec():
     global secili_arkaplan
-    secenekler = ['Siyah', 'Orman']
+    secenekler = ['Siyah', 'Orman', 'Sahil']
     secili = secenekler.index(secili_arkaplan) if secili_arkaplan in secenekler else 0
     
     while True:
@@ -590,7 +592,7 @@ def arkaplan_sec():
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
-        # Modern ayırıcı çizgi
+        #  ayırıcı çizgi
         pygame.draw.line(ekran, CYAN, (100, 110), (PENCERE_GENISLIK-100, 110), 3)
         
         # Arkaplanları göster - karakter menüsü gibi
@@ -605,7 +607,7 @@ def arkaplan_sec():
             kutu_x = PENCERE_GENISLIK//2 - kutu_genislik//2
             kutu_rect = pygame.Rect(kutu_x, y-20, kutu_genislik, kutu_yukseklik)
             
-            # Modern arkaplan kutusu
+            #  arkaplan kutusu
             if secili_mi:
                 pygame.draw.rect(ekran, KOYU_GRI, kutu_rect, 0, 15)
                 pygame.draw.rect(ekran, CYAN, kutu_rect, 4, 15)
@@ -613,33 +615,44 @@ def arkaplan_sec():
                 pygame.draw.rect(ekran, (30, 30, 35), kutu_rect, 0, 15)
                 pygame.draw.rect(ekran, ACIK_GRI, kutu_rect, 2, 15)
             
-            # Arkaplan önizlemesi - gerçek resimleri göster, karakter sprite'ı ile aynı pozisyonda
+            # Arkaplan önizlemesi - gerçek resimleri göster
             if isim == 'Siyah':
-                # Siyah arkaplan için siyah kare - çerçeve yok
+                # Siyah arkaplan için siyah kare
                 onizleme_rect = pygame.Rect(0, 0, 80, 80)
                 onizleme_rect.center = (kutu_x + 80, y + 40)
                 pygame.draw.rect(ekran, SIYAH, onizleme_rect, 0, 5)
-            else:  # Orman
-                # Gerçek orman resmini küçültüp göster - çerçeve yok
+            elif isim == 'Orman':
+                # Gerçek orman resmini küçültüp göster
                 try:
                     orman_onizleme = pygame.image.load("assets/orman.png")
                     orman_onizleme = pygame.transform.scale(orman_onizleme, (80, 80))
-                    # Karakter sprite'ı ile aynı merkez pozisyonu
                     sprite_rect = orman_onizleme.get_rect(center=(kutu_x + 80, y + 40))
                     ekran.blit(orman_onizleme, sprite_rect)
                 except:
-                    # Resim yüklenemezse basit yeşil kare - çerçeve yok
+                    # Resim yüklenemezse basit yeşil kare
                     onizleme_rect = pygame.Rect(0, 0, 80, 80)
                     onizleme_rect.center = (kutu_x + 80, y + 40)
                     pygame.draw.rect(ekran, (0, 100, 0), onizleme_rect, 0, 5)
+            else:  # Sahil
+                # Gerçek sahil resmini küçültüp göster
+                try:
+                    beach_onizleme = pygame.image.load("assets/beach.png")
+                    beach_onizleme = pygame.transform.scale(beach_onizleme, (80, 80))
+                    sprite_rect = beach_onizleme.get_rect(center=(kutu_x + 80, y + 40))
+                    ekran.blit(beach_onizleme, sprite_rect)
+                except:
+                    # Resim yüklenemezse basit mavi kare
+                    onizleme_rect = pygame.Rect(0, 0, 80, 80)
+                    onizleme_rect.center = (kutu_x + 80, y + 40)
+                    pygame.draw.rect(ekran, (30, 144, 255), onizleme_rect, 0, 5)
             
-            # Arkaplan ismi - modern renkler
+            # Arkaplan ismi 
             renk = CYAN if secili_mi else BEYAZ
             isim_text = font.render(isim, True, renk)
             isim_rect = isim_text.get_rect(center=(kutu_x + 280, y + 30))
             ekran.blit(isim_text, isim_rect)
             
-            # "AKTIF" yazısı - modern yeşil
+            # "AKTIF" yazısı 
             if isim == secili_arkaplan:
                 aktif_text = kucuk_font.render("AKTIF", True, NEON_YESIL)
                 aktif_rect = aktif_text.get_rect(center=(kutu_x + 280, y + 60))
@@ -669,12 +682,12 @@ def garbage_sec():
     while True:
         ekran.fill(SIYAH)
         
-        # Başlık - modern stil
+        # Başlık 
         baslik = buyuk_font.render('ÇÖP POŞETİ SEÇ', True, CYAN)
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
-        # Modern ayırıcı çizgi
+        #  ayırıcı çizgi
         pygame.draw.line(ekran, CYAN, (100, 110), (PENCERE_GENISLIK-100, 110), 3)
         
         # Poşetleri göster - karakter menüsü gibi
@@ -689,7 +702,7 @@ def garbage_sec():
             kutu_x = PENCERE_GENISLIK//2 - kutu_genislik//2
             kutu_rect = pygame.Rect(kutu_x, y-20, kutu_genislik, kutu_yukseklik)
             
-            # Modern poşet kutusu
+            #  poşet kutusu
             if secili_mi:
                 pygame.draw.rect(ekran, KOYU_GRI, kutu_rect, 0, 15)
                 pygame.draw.rect(ekran, CYAN, kutu_rect, 4, 15)
@@ -703,13 +716,13 @@ def garbage_sec():
             sprite_rect = buyuk_sprite.get_rect(center=(kutu_x + 80, y + 40))
             ekran.blit(buyuk_sprite, sprite_rect)
             
-            # Poşet ismi - modern renkler
+            # Poşet ismi 
             renk = CYAN if secili_mi else BEYAZ
             isim_text = font.render(isim, True, renk)
             isim_rect = isim_text.get_rect(center=(kutu_x + 280, y + 30))
             ekran.blit(isim_text, isim_rect)
             
-            # "AKTIF" yazısı - modern yeşil
+            # "AKTIF" yazısı 
             if isim == secili_garbage:
                 aktif_text = kucuk_font.render("AKTIF", True, NEON_YESIL)
                 aktif_rect = aktif_text.get_rect(center=(kutu_x + 280, y + 60))
@@ -774,12 +787,12 @@ def oyun_bitti_ekrani(skor, zorluk_ismi):
     while True:
         ekran.fill(SIYAH)
         
-        # Modern başlık
+        #  başlık
         baslik = buyuk_font.render('OYUN BITTI!', True, KIRMIZI)
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 100))
         ekran.blit(baslik, baslik_rect)
         
-        # Oyun sonucu bilgileri - modern renkler
+        # Oyun sonucu bilgileri 
         oyuncu_text = font.render(f'Oyuncu: {oyuncu_adi}', True, CYAN)
         oyuncu_rect = oyuncu_text.get_rect(center=(PENCERE_GENISLIK//2, 170))
         ekran.blit(oyuncu_text, oyuncu_rect)
@@ -792,7 +805,7 @@ def oyun_bitti_ekrani(skor, zorluk_ismi):
         zorluk_rect = zorluk_text.get_rect(center=(PENCERE_GENISLIK//2, 230))
         ekran.blit(zorluk_text, zorluk_rect)
         
-        # Çevresel mesaj - modern renk
+        # Çevresel mesaj 
         sosyal = font.render("Daha temiz bir dünya için çöpünü yere atma!", True, NEON_YESIL)
         sosyal_rect = sosyal.get_rect(center=(PENCERE_GENISLIK//2, 290))
         ekran.blit(sosyal, sosyal_rect)
@@ -940,21 +953,23 @@ def main():
                 # Arkaplanı çiz
                 if secili_arkaplan == 'Orman':
                     ekran.blit(orman_arkaplan, (0, 0))
+                elif secili_arkaplan == 'Sahil':
+                    ekran.blit(beach_arkaplan, (0, 0))
                 else:
                     ekran.fill(SIYAH)
                     
                 toplayici.ciz(ekran)
                 cop.ciz(ekran)
                 
-                # Modern UI arka plan
+                #  UI arka plan
                 pygame.draw.rect(ekran, KOYU_GRI, (0, 0, PENCERE_GENISLIK, 45))
-                pygame.draw.rect(ekran, SIYAH, (0, 43, PENCERE_GENISLIK, 2))  # Alt çizgi
+                pygame.draw.rect(ekran, ACIK_GRI, (0, 43, PENCERE_GENISLIK, 2))  # Alt çizgi
                 
-                # Sol üst - Oyuncu ve skor bilgisi (modern renkler)
+                # Sol üst - Oyuncu ve skor bilgisi 
                 oyuncu_text = kucuk_font.render(f"{oyuncu_adi}: {skor} çöp", True, ACIK_GRI)
                 ekran.blit(oyuncu_text, (10, 10))
                 
-                # Sağ üst - ESC bilgisi (modern renkler)
+                # Sağ üst - ESC bilgisi 
                 esc_bilgi = kucuk_font.render("ESC: Ana Menü", True, ACIK_GRI)
                 ekran.blit(esc_bilgi, (PENCERE_GENISLIK - 130, 15))
                 
