@@ -42,7 +42,7 @@ FPS = 60  # Ekran yenileme hızı (akıcılık için yüksek tutulmalı)
 
 # Ekranı oluştur
 ekran = pygame.display.set_mode((PENCERE_GENISLIK, PENCERE_YUKSEKLIK))
-pygame.display.set_caption("Çöp Toplama Oyunu")
+pygame.display.set_caption("EcoSnake-Game")
 saat = pygame.time.Clock()
 
 
@@ -218,6 +218,7 @@ def skor_tablosu_goster():
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
+        
         if not skorlar:
             mesaj = font.render('Henüz hiç skor kaydedilmemiş!', True, BEYAZ)
             mesaj_rect = mesaj.get_rect(center=(PENCERE_GENISLIK//2, 200))
@@ -271,7 +272,7 @@ def skor_tablosu_goster():
                 y_pos += 25
         
         # Geri dön bilgisi
-        geri = font.render("Geri dönmek için ESC'ye basın", True, MAVI)
+        geri = font.render("Geri dönmek için ESC'ye basın", True, GRI)
         geri_rect = geri.get_rect(center=(PENCERE_GENISLIK//2, 520))
         ekran.blit(geri, geri_rect)
         
@@ -360,12 +361,12 @@ def karakter_sec():
         ekran.fill(SIYAH)
         
         # Başlık - tutarlı stil
-        baslik = buyuk_font.render('KARAKTER SEÇ', True, MAVI)
+        baslik = buyuk_font.render('KARAKTER SEÇ', True, SARI)
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
         # Ayırıcı çizgi
-        pygame.draw.line(ekran, MAVI, (100, 110), (PENCERE_GENISLIK-100, 110), 2)
+        pygame.draw.line(ekran, SARI, (100, 110), (PENCERE_GENISLIK-100, 110), 2)
         
         # Karakterleri göster - daha düzenli
         baslangic_y = 160
@@ -434,11 +435,11 @@ def ana_menu():
         ekran.fill(SIYAH)
         
         # Ana başlık
-        baslik = buyuk_font.render('EcoSnake Game', True, YESIL)
+        baslik = buyuk_font.render('EcoSnake Game', True, (0, 255, 255))  # Cyan 
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 100))
         ekran.blit(baslik, baslik_rect)
         
-        alt_baslik = font.render('Çevreyi Koruma Oyunu', True, SARI)
+        alt_baslik = font.render('Çevreyi Koruma Oyunu', True, YESIL)
         alt_rect = alt_baslik.get_rect(center=(PENCERE_GENISLIK//2, 140))
         ekran.blit(alt_baslik, alt_rect)
         
@@ -487,9 +488,6 @@ def ana_menu():
                     secili = (secili + 1) % len(secenekler)
                 elif olay.key == pygame.K_RETURN:
                     if secili == 0:  # Oyuna Başla
-                        if not oyuncu_adi:
-                            if not isim_gir():  # ESC ile çıkılmışsa
-                                continue  # Ana menüye dön
                         return 'oyun'
                     elif secili == 1:  # Skor Tablosu
                         skor_tablosu_goster()
@@ -500,19 +498,19 @@ def ana_menu():
                         sys.exit()
 
 def ayarlar_menu():
-    secenekler = ['Karakter Seç', 'Arkaplan Seç', 'Çöp Poşeti Seç', 'Geri Dön']
+    secenekler = ['Karakter Seç', 'Arkaplan Seç', 'Çöp Poşeti Seç']
     secili = 0
     
     while True:
         ekran.fill(SIYAH)
         
         # Başlık - daha yukarıda ve büyük
-        baslik = buyuk_font.render('AYARLAR', True, MAVI)
+        baslik = buyuk_font.render('AYARLAR', True, SARI)
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
         # Ayırıcı çizgi
-        pygame.draw.line(ekran, MAVI, (100, 110), (PENCERE_GENISLIK-100, 110), 2)
+        pygame.draw.line(ekran, GRI, (100, 110), (PENCERE_GENISLIK-100, 110), 2)
         
         # Menü seçenekleri - mevcut ayarlar kutusu kaldırıldı, daha yukarı taşındı
         menu_baslangic_y = 160  # Daha yukarıda
@@ -532,6 +530,11 @@ def ayarlar_menu():
             if i == secili:
                 # Sadece seçili kutusunu vurguladık, ok işaretlerini kaldırdık
                 pass
+        
+        # Geri dön bilgisi
+        geri = font.render("Geri dönmek için ESC'ye basın", True, GRI)
+        geri_rect = geri.get_rect(center=(PENCERE_GENISLIK//2, 420))
+        ekran.blit(geri, geri_rect)
         
         pygame.display.flip()
         
@@ -553,8 +556,6 @@ def ayarlar_menu():
                         arkaplan_sec()
                     elif secili == 2:  # Çöp Türü Seç
                         garbage_sec()
-                    elif secili == 3:  # Geri Dön
-                        return
 
 def arkaplan_sec():
     global secili_arkaplan
@@ -565,12 +566,12 @@ def arkaplan_sec():
         ekran.fill(SIYAH)
         
         # Başlık - tutarlı stil
-        baslik = buyuk_font.render('ARKAPLAN SEÇ', True, MAVI)
+        baslik = buyuk_font.render('ARKAPLAN SEÇ', True, SARI)
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
         # Ayırıcı çizgi
-        pygame.draw.line(ekran, MAVI, (100, 110), (PENCERE_GENISLIK-100, 110), 2)
+        pygame.draw.line(ekran, SARI, (100, 110), (PENCERE_GENISLIK-100, 110), 2)
         
         # Arkaplanları göster - karakter menüsü gibi
         baslangic_y = 160
@@ -649,12 +650,12 @@ def garbage_sec():
         ekran.fill(SIYAH)
         
         # Başlık - tutarlı stil
-        baslik = buyuk_font.render('ÇÖP POŞETİ SEÇ', True, MAVI)
+        baslik = buyuk_font.render('ÇÖP POŞETİ SEÇ', True, SARI)
         baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
         ekran.blit(baslik, baslik_rect)
         
         # Ayırıcı çizgi
-        pygame.draw.line(ekran, MAVI, (100, 110), (PENCERE_GENISLIK-100, 110), 2)
+        pygame.draw.line(ekran, SARI, (100, 110), (PENCERE_GENISLIK-100, 110), 2)
         
         # Poşetleri göster - karakter menüsü gibi
         baslangic_y = 160
@@ -777,15 +778,15 @@ def oyun_bitti_ekrani(skor, zorluk_ismi):
         ekran.blit(sosyal, sosyal_rect)
         
         # Seçenekler
-        tekrar = font.render("Tekrar oynamak için ENTER'a bas", True, MAVI)
+        tekrar = font.render("Tekrar oynamak için ENTER'a bas", True, BEYAZ)
         tekrar_rect = tekrar.get_rect(center=(PENCERE_GENISLIK//2, 350))
         ekran.blit(tekrar, tekrar_rect)
         
-        skor_goster = font.render("Skor tablosunu görmek için S'ye bas", True, SARI)
+        skor_goster = font.render("Skor tablosunu görmek için S'ye bas", True, BEYAZ)
         skor_goster_rect = skor_goster.get_rect(center=(PENCERE_GENISLIK//2, 380))
         ekran.blit(skor_goster, skor_goster_rect)
         
-        menu = font.render("Ana menü için M'ye bas", True, MAVI)
+        menu = font.render("Ana menü için M'ye bas", True, BEYAZ)
         menu_rect = menu.get_rect(center=(PENCERE_GENISLIK//2, 410))
         ekran.blit(menu, menu_rect)
         
@@ -822,10 +823,27 @@ def main():
         elif menu_secim != 'oyun':
             continue
         
-        # Oyun öncesi zorluk seçimi
-        oyun_hizi, zorluk_ismi = zorluk_sec()  # Hareket hızı ve zorluk ismi
+        # Oyuncu adı kontrolü ve zorluk seçimi döngüsü
+        oyun_hizi = None  # Başlangıç değeri
+        zorluk_ismi = None  # Başlangıç değeri
         
-        # ESC ile çıkış kontrolü
+        while True:
+            # Her oyuna girmeden önce isim sor
+            if not isim_gir():  # ESC ile çıkılmışsa
+                break  # Ana menüye dön
+            
+            # Zorluk seçimi
+            oyun_hizi, zorluk_ismi = zorluk_sec()  # Hareket hızı ve zorluk ismi
+            
+            # Zorluk seçiminde ESC ile çıkış kontrolü
+            if oyun_hizi is None or zorluk_ismi is None:
+                # Zorluk seçiminde ESC'ye basılmışsa, isim girme ekranına dön
+                oyuncu_adi = ""  # İsmi sıfırla, tekrar isim girme ekranına git
+                continue
+            else:
+                break  # Zorluk seçildi, oyuna geç
+        
+        # Eğer bu noktaya gelmişse, ya ESC ile çıkılmış ya da zorluk seçilmiş
         if oyun_hizi is None or zorluk_ismi is None:
             continue  # Ana menüye dön
         
