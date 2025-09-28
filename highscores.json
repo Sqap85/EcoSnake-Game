@@ -1,0 +1,22 @@
+[
+  {
+    "isim": "engin",
+    "skor": 17,
+    "zorluk": "Zor"
+  },
+  {
+    "isim": "selam",
+    "skor": 11,
+    "zorluk": "Orta"
+  },
+  {
+    "isim": "selam",
+    "skor": 8,
+    "zorluk": "Orta"
+  },
+  {
+    "isim": "selam",
+    "skor": 6,
+    "zorluk": "Zor"
+  }
+]
