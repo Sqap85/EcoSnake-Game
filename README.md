@@ -117,6 +117,5 @@ Bu proje MIT lisansı altında yayınlanmıştır. Detaylar için LICENSE dosyas
 Sorularınız veya önerileriniz için:
 - GitHub Issues bölümü
 - Pull Request gönderin
-- Projeyi star'layarak destek olun ⭐
 
 **Eğlenceli oyunlar ve temiz bir çevre dileğiyle!** 🎮🌿
