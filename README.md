@@ -1,11 +1,11 @@
-# 🌍 Çöp Toplama Oyunu
+# 🐍 EcoSnake Game
 
 Eğlenceli ve eğitici bir çevre koruma oyunu! Çöpleri toplayarak doğayı temiz tut ve çevre bilincini geliştir.
 
 
 ## 🎮 Oyun Hakkında
 
-Bu oyun, çevre bilincini geliştirmek amacıyla tasarlanmış eğitici bir Python oyunudur. Oyuncu, farklı türdeki çöpleri toplayarak çevreyi temiz tutar.
+Bu oyun, çevre bilincini geliştirmek amacıyla tasarlanmış eğitici bir Python oyunudur. Oyuncu, farklı türdeki çöpleri toplayarak çevreyi temiz tutar. EcoSnake, klasik Yılan oyunu mekaniğini çevre koruma temasıyla birleştirir
 
 ## 🚀 Kurulum ve Çalıştırma
 
@@ -42,8 +42,8 @@ sudo apt install python3 python3-pip
 
 #### Git ile indirin (önerilen):
 ```bash
-git clone https://github.com/Sqap85/yilan-oyunu.git
-cd yilan-oyunu
+git clone https://github.com/Sqap85/EcoSnake-Game.git
+cd EcoSnake-Game
 ```
 
 #### Veya ZIP olarak indirin:
@@ -67,12 +67,12 @@ pip install pygame
 ### 4️⃣ Adım: Oyunu Başlatın
 
 ```bash
-python cop_toplama_oyunu.py
+python EcoSnake.py
 ```
 
 **Not:** Eğer `python` komutu çalışmıyorsa:
-- Windows: `py cop_toplama_oyunu.py`
-- macOS/Linux: `python3 cop_toplama_oyunu.py`
+- Windows: `py EcoSnake.py`
+- macOS/Linux: `python3 EcoSnake.py`
 
 ## 🎯 Nasıl Oynanır?
 
