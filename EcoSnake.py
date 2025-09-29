@@ -186,13 +186,27 @@ def skor_kaydet(isim, skor, karakter, zorluk):
     except (FileNotFoundError, json.JSONDecodeError):
         skorlar = []
     
+    # Aynı isimli oyuncu var mı kontrol et
+    mevcut_oyuncu_indeks = -1
+    for i, oyuncu in enumerate(skorlar):
+        if oyuncu['isim'] == isim:
+            mevcut_oyuncu_indeks = i
+            break
+    
     yeni_skor = {
         'isim': isim,
         'skor': skor,
         'zorluk': zorluk
     }
     
-    skorlar.append(yeni_skor)
+    if mevcut_oyuncu_indeks != -1:
+        # Aynı isimli oyuncu varsa, sadece daha iyi skor ise güncelle
+        if skor > skorlar[mevcut_oyuncu_indeks]['skor']:
+            skorlar[mevcut_oyuncu_indeks] = yeni_skor
+    else:
+        # Yeni oyuncu ise ekle
+        skorlar.append(yeni_skor)
+    
     skorlar.sort(key=lambda x: x['skor'], reverse=True)
     skorlar = skorlar[:10]
     
