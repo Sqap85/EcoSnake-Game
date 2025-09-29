@@ -421,9 +421,9 @@ def ana_menu():
             y = menu_baslangic_y + i * 60
             
             if i == secili:
-                pygame.draw.rect(ekran, KOYU_GRI, (220, y-25, PENCERE_GENISLIK-440, 50), 0, 12)
-                pygame.draw.rect(ekran, CYAN, (220, y-25, PENCERE_GENISLIK-440, 50), 3, 12)
-                pygame.draw.rect(ekran, (52, 73, 94), (225, y-20, PENCERE_GENISLIK-450, 40), 0, 10)
+                pygame.draw.rect(ekran, KOYU_GRI, (280, y-25, 240, 50), 0, 12)
+                pygame.draw.rect(ekran, CYAN, (280, y-25, 240, 50), 3, 12)
+                pygame.draw.rect(ekran, (52, 73, 94), (285, y-20, 230, 40), 0, 10)
             
             text = font.render(secenek, True, renk)
             text_rect = text.get_rect(center=(PENCERE_GENISLIK//2, y))
@@ -480,8 +480,8 @@ def ayarlar_menu():
             y = menu_baslangic_y + i * 60
             
             if i == secili:
-                pygame.draw.rect(ekran, KOYU_GRI, (220, y-25, PENCERE_GENISLIK-440, 50), 0, 10)
-                pygame.draw.rect(ekran, CYAN, (220, y-25, PENCERE_GENISLIK-440, 50), 3, 10)
+                pygame.draw.rect(ekran, KOYU_GRI, (280, y-25, 240, 50), 0, 10)
+                pygame.draw.rect(ekran, CYAN, (280, y-25, 240, 50), 3, 10)
             
             text = font.render(secenek, True, renk)
             text_rect = text.get_rect(center=(PENCERE_GENISLIK//2, y))
