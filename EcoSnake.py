@@ -38,9 +38,9 @@ PENCERE_YUKSEKLIK = 600
 KARE_BOYUT = 30
 
 HIZLAR = {
-    'Kolay': 4,
-    'Orta': 9,
-    'Zor': 15
+    'Kolay': 5,
+    'Orta': 10,
+    'Zor': 18
 }
 
 # Zorluk renkleri
