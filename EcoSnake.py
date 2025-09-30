@@ -112,7 +112,34 @@ def skor_satiri_ciz(ekran, i, skor_bilgi, y_pos, pozisyonlar):
         text_surface = kucuk_font.render(text, True, renk)
         ekran.blit(text_surface, (x_pos, y_pos))
 
-# Oyuncu verileri
+# Ayarları kaydetme ve yükleme fonksiyonları
+def ayarlari_kaydet():
+    ayarlar = {
+        'secili_karakter': secili_karakter,
+        'secili_arkaplan': secili_arkaplan,
+        'secili_garbage': secili_garbage
+    }
+    try:
+        with open('ayarlar.json', 'w', encoding='utf-8') as f:
+            json.dump(ayarlar, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Ayarlar kaydedilemedi: {e}")
+
+def ayarlari_yukle():
+    global secili_karakter, secili_arkaplan, secili_garbage
+    try:
+        with open('ayarlar.json', 'r', encoding='utf-8') as f:
+            ayarlar = json.load(f)
+            secili_karakter = ayarlar.get('secili_karakter', "Bahçıvan")
+            secili_arkaplan = ayarlar.get('secili_arkaplan', "Siyah")
+            secili_garbage = ayarlar.get('secili_garbage', "Tatlı Poşet")
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        # Dosya yoksa veya hatalıysa varsayılan değerleri kullan
+        secili_karakter = "Bahçıvan"
+        secili_arkaplan = "Siyah"
+        secili_garbage = "Tatlı Poşet"
+
+# Oyuncu verileri - oyun başlangıcında yüklenecek
 oyuncu_adi = ""
 secili_karakter = "Bahçıvan"
 secili_arkaplan = "Siyah"
@@ -387,6 +414,7 @@ def karakter_sec():
                     secili = (secili + 1) % len(karakter_isimleri)
                 elif olay.key == pygame.K_RETURN:
                     secili_karakter = karakter_isimleri[secili]
+                    ayarlari_kaydet()
                     return
 
 def ana_menu():
@@ -405,14 +433,13 @@ def ana_menu():
         alt_rect = alt_baslik.get_rect(center=(PENCERE_GENISLIK//2, 140))
         ekran.blit(alt_baslik, alt_rect)
         
-        # Oyuncu bilgileri
-        if oyuncu_adi:
-            oyuncu_text = kucuk_font.render(f'Oyuncu: {oyuncu_adi}', True, BEYAZ)
-            ekran.blit(oyuncu_text, (20, 20))
-            karakter_text = kucuk_font.render(f'Karakter: {secili_karakter}', True, BEYAZ)
-            ekran.blit(karakter_text, (20, 40))
-            arkaplan_text = kucuk_font.render(f'Arkaplan: {secili_arkaplan}', True, BEYAZ)
-            ekran.blit(arkaplan_text, (20, 60))
+        # Oyuncu bilgileri 
+        karakter_text = kucuk_font.render(f'Karakter: {secili_karakter}', True, BEYAZ)
+        ekran.blit(karakter_text, (20, 20))
+        arkaplan_text = kucuk_font.render(f'Arkaplan: {secili_arkaplan}', True, BEYAZ)
+        ekran.blit(arkaplan_text, (20, 40))
+        garbage_text = kucuk_font.render(f'Çöp Poşeti: {secili_garbage}', True, BEYAZ)
+        ekran.blit(garbage_text, (20, 60))
         
         # Menü seçenekleri
         menu_baslangic_y = 220
@@ -578,6 +605,7 @@ def arkaplan_sec():
                     secili = (secili + 1) % len(secenekler)
                 elif olay.key == pygame.K_RETURN or olay.key == pygame.K_SPACE:
                     secili_arkaplan = secenekler[secili]
+                    ayarlari_kaydet()
                     return
                 elif olay.key == pygame.K_ESCAPE:
                     return
@@ -637,6 +665,7 @@ def garbage_sec():
                     secili = (secili + 1) % len(secenekler)
                 elif olay.key == pygame.K_RETURN or olay.key == pygame.K_SPACE:
                     secili_garbage = secenekler[secili]
+                    ayarlari_kaydet()
                     return
                 elif olay.key == pygame.K_ESCAPE:
                     return
@@ -790,6 +819,9 @@ def oyun_bitti_ekrani(skor, zorluk_ismi):
 
 def main():
     global FPS, oyuncu_adi, secili_karakter, secili_arkaplan
+    
+    # Oyun başlangıcında ayarları yükle
+    ayarlari_yukle()
     
     while True:
         menu_secim = ana_menu()
