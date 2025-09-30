@@ -861,6 +861,11 @@ def main():
                     hareket_zamani = True
                     eski_kuyruk = toplayici.kareler[-1]
                     toplayici.hareket_et()
+                    
+                    # Hareket ettikten hemen sonra çarpışma kontrolü yap
+                    if toplayici.carpisma_kontrolu():
+                        oyun_bitti = True
+                        break
                 
                 bas_x, bas_y = toplayici.kareler[0]
                 
@@ -874,10 +879,6 @@ def main():
                     
                     skor += 1
                     cop = Cop()
-                
-                if hareket_zamani:
-                    if toplayici.carpisma_kontrolu():
-                        oyun_bitti = True
 
                 # Arkaplanı çiz
                 if secili_arkaplan in ARKAPLANLAR:
