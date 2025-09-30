@@ -64,7 +64,7 @@ def sprite_yukle(dosya_adi, boyut=(KARE_BOYUT, KARE_BOYUT)):
 # Karakterler
 KARAKTERLER = {
     'Bahçıvan': sprite_yukle("gardener.png"),
-    'HakanTema': sprite_yukle("hakantema.png"),
+    'Sarışın Kız': sprite_yukle("girl.png"),
     'Tombik Çocuk': sprite_yukle("obesity.png")
 }
 
