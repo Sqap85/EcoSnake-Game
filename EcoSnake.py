@@ -785,21 +785,17 @@ def oyun_bitti_ekrani(skor, zorluk_ismi):
         ekran.blit(s_text2, (baslangic_x + s_text1.get_width(), 380))
         ekran.blit(s_text3, (baslangic_x + s_text1.get_width() + s_text2.get_width(), 380))
         
-        # M seçeneği
-        m_text1 = font.render("Ana menü için ", True, BEYAZ)
-        m_text2 = font.render("M", True, SARI)
-        m_text3 = font.render("'ye bas", True, BEYAZ)
+        # ESC seçeneği
+        esc_text1 = font.render("Ana menü için ", True, BEYAZ)
+        esc_text2 = font.render("ESC", True, SARI)
+        esc_text3 = font.render("'ye bas", True, BEYAZ)
         
-        toplam_genislik = m_text1.get_width() + m_text2.get_width() + m_text3.get_width()
+        toplam_genislik = esc_text1.get_width() + esc_text2.get_width() + esc_text3.get_width()
         baslangic_x = (PENCERE_GENISLIK - toplam_genislik) // 2
         
-        ekran.blit(m_text1, (baslangic_x, 410))
-        ekran.blit(m_text2, (baslangic_x + m_text1.get_width(), 410))
-        ekran.blit(m_text3, (baslangic_x + m_text1.get_width() + m_text2.get_width(), 410))
-        
-        cikis = font.render("Çıkmak için ESC'ye bas", True, GRI)
-        cikis_rect = cikis.get_rect(center=(PENCERE_GENISLIK//2, 470))
-        ekran.blit(cikis, cikis_rect)
+        ekran.blit(esc_text1, (baslangic_x, 410))
+        ekran.blit(esc_text2, (baslangic_x + esc_text1.get_width(), 410))
+        ekran.blit(esc_text3, (baslangic_x + esc_text1.get_width() + esc_text2.get_width(), 410))
         
         pygame.display.flip()
         for olay in pygame.event.get():
@@ -811,11 +807,8 @@ def oyun_bitti_ekrani(skor, zorluk_ismi):
                     return 'tekrar'
                 elif olay.key == pygame.K_s:
                     skor_tablosu_goster()
-                elif olay.key == pygame.K_m:
-                    return 'menu'
                 elif olay.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+                    return 'menu'
 
 def main():
     global FPS, oyuncu_adi, secili_karakter, secili_arkaplan
