@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-EcoSnake Game - Çevre Koruma Temalı Yılan Oyunu
+EcoSnake Game - Environmental Protection Themed Snake Game
 Copyright (c) 2025 Sqap85
 
-Bu proje MIT lisansı altında yayınlanmıştır.
-Detaylar için LICENSE dosyasına bakınız.
+This project is published under the MIT license.
+See the LICENSE file for details.
 """
 
 import pygame
@@ -16,924 +16,1028 @@ import json
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 pygame.init()
 
-# Renk Paleti
-SIYAH = (20, 20, 30)
-BEYAZ = (250, 250, 255)
-YESIL = (46, 204, 113)
-KIRMIZI = (231, 76, 60)
-MAVI = (52, 152, 219)
-KAHVERENGI = (160, 116, 85)
-SARI = (241, 196, 15)
-GRI = (149, 165, 166)
-NEON_YESIL = (39, 174, 96)
-MOR = (155, 89, 182)
-TURUNCU = (230, 126, 34)
-CYAN = (26, 188, 156)
-KOYU_GRI = (52, 73, 94)
-ACIK_GRI = (200, 210, 215)
-
-# Oyun ayarları
-PENCERE_GENISLIK = 800
-PENCERE_YUKSEKLIK = 600
-KARE_BOYUT = 30
-
-HIZLAR = {
-    'Kolay': 5,
-    'Orta': 10,
-    'Zor': 18
+# =============================================================================
+# NAMING CONFIGURATION
+# =============================================================================
+GAME_NAMES = {
+    # Main game elements
+    'game_title': 'EcoSnake Game',
+    'game_subtitle': 'Environmental Protection Game',
+    
+    # Menu items
+    'start_game': 'Start Game',
+    'high_scores': 'High Scores',
+    'settings': 'Settings',
+    'exit': 'Exit',
+    
+    # Characters
+    'character1': 'Gardener',
+    'character2': 'Blonde Girl', 
+    'character3': 'Chubby Child',
+    
+    # Backgrounds
+    'background1': 'Black',
+    'background2': 'Forest',
+    'background3': 'Beach',
+    
+    # Garbage bags
+    'garbage_bag1': 'Sweet Bag',
+    'garbage_bag2': 'Yellow Bag',
+    'garbage_bag3': 'Black Bag',
+    
+    # Difficulty levels
+    'difficulty1': 'Easy',
+    'difficulty2': 'Medium',
+    'difficulty3': 'Hard',
+    
+    # Settings menu
+    'select_character': 'Select Character',
+    'select_background': 'Select Background',
+    'select_garbage_bag': 'Select Garbage Bag',
+    
+    # UI messages
+    'enter_player_name': 'ENTER PLAYER NAME',
+    'type_your_name': 'Type your name here...',
+    'game_over': 'GAME OVER!',
+    'player': 'Player',
+    'collected_trash': 'Collected Trash',
+    'difficulty': 'Difficulty',
+    'active': 'ACTIVE',
+    'select_difficulty': 'Select Difficulty:',
+    'no_scores_yet': 'No scores recorded yet!',
+    'press_esc_back': "Press ESC to go back",
+    'press_enter_ok': 'ENTER - OK',
+    'press_esc_return': 'ESC - Go Back',
+    'character_info': 'Character',
+    'background_info': 'Background',
+    'garbage_bag_info': 'Garbage Bag',
+    'press_esc_main_menu': 'ESC: Main Menu',
+    'environmental_message': "Don't throw trash on the ground for a cleaner world!",
+    'play_again_enter': 'Press ENTER to play again',
+    'show_scores_s': 'Press S to show scores',
+    'main_menu_esc': 'Press ESC for main menu',
+    
+    # Table headers  
+    'rank': 'Rank',
+    'name': 'Name',
+    'score': 'Score',
+    'difficulty_header': 'Difficulty',
+    
+    # Instructions
+    'arrow_keys_select': 'Use arrow keys to select, ENTER to confirm, ESC to exit',
+    '2_12_characters': '2-12 characters',
+    'press_esc_exit': 'Press ESC to exit',
+    'trash_collected': 'trash collected'
 }
 
-# Zorluk renkleri
-ZORLUK_RENKLERI = {
-    'Kolay': YESIL,
-    'Orta': TURUNCU, 
-    'Zor': KIRMIZI
+# Color Palette
+BLACK = (20, 20, 30)
+WHITE = (250, 250, 255)
+GREEN = (46, 204, 113)
+RED = (231, 76, 60)
+BLUE = (52, 152, 219)
+BROWN = (160, 116, 85)
+YELLOW = (241, 196, 15)
+GRAY = (149, 165, 166)
+NEON_GREEN = (39, 174, 96)
+PURPLE = (155, 89, 182)
+ORANGE = (230, 126, 34)
+CYAN = (26, 188, 156)
+DARK_GRAY = (52, 73, 94)
+LIGHT_GRAY = (200, 210, 215)
+
+# Game settings
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+SQUARE_SIZE = 30
+
+# UI Constants
+UI_AREA_HEIGHT = 45
+UI_BORDER_HEIGHT = 2
+MENU_BOX_WIDTH = 500
+MENU_BOX_HEIGHT = 120
+MENU_ITEM_SPACING = 60
+MENU_ITEM_HEIGHT = 50
+EDGE_MARGIN = 15
+LARGE_SPRITE_SIZE = 80
+NAME_INPUT_WIDTH = 400
+NAME_INPUT_HEIGHT = 60
+MAX_NAME_LENGTH = 12
+MIN_NAME_LENGTH = 2
+
+SPEEDS = {
+    GAME_NAMES['difficulty1']: 5,
+    GAME_NAMES['difficulty2']: 10,
+    GAME_NAMES['difficulty3']: 18
+}
+
+# Difficulty colors
+DIFFICULTY_COLORS = {
+    GAME_NAMES['difficulty1']: GREEN,
+    GAME_NAMES['difficulty2']: ORANGE, 
+    GAME_NAMES['difficulty3']: RED
 }
 FPS = 60
 
-ekran = pygame.display.set_mode((PENCERE_GENISLIK, PENCERE_YUKSEKLIK))
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("EcoSnake-Game")
-saat = pygame.time.Clock()
+clock = pygame.time.Clock()
 
 
-# Sprite yükleme fonksiyonu
-def sprite_yukle(dosya_adi, boyut=(KARE_BOYUT, KARE_BOYUT)):
-    sprite = pygame.image.load(f"assets/{dosya_adi}")
-    return pygame.transform.scale(sprite, boyut)
+# Sprite loading function
+def load_sprite(filename, size=(SQUARE_SIZE, SQUARE_SIZE)):
+    sprite = pygame.image.load(f"assets/{filename}")
+    return pygame.transform.scale(sprite, size)
 
-# Karakterler
-KARAKTERLER = {
-    'Bahçıvan': sprite_yukle("gardener.png"),
-    'Sarışın Kız': sprite_yukle("girl.png"),
-    'Tombik Çocuk': sprite_yukle("obesity.png")
+# Characters
+CHARACTERS = {
+    GAME_NAMES['character1']: load_sprite("gardener.png"),
+    GAME_NAMES['character2']: load_sprite("blonde_girl.png"),
+    GAME_NAMES['character3']: load_sprite("chubby_child.png")
 }
 
-# Çöp türleri
-COP_SPRITES = {
-    'apple': sprite_yukle("apple.png"),
-    'banana': sprite_yukle("banana.png"),
-    'bottle': sprite_yukle("bottle.png"),
-    'landfill': sprite_yukle("landfill.png")
+# Trash types
+TRASH_SPRITES = {
+    'apple': load_sprite("apple.png"),
+    'banana': load_sprite("banana.png"),
+    'bottle': load_sprite("bottle.png"),
+    'landfill': load_sprite("landfill.png")
 }
 
-# Çöp poşetleri
-GARBAGE_TURLERI = {
-    'Tatlı Poşet': sprite_yukle("garbage1.png"),
-    'Sarı Poşet': sprite_yukle("garbage2.png"),
-    'Siyah Poşet': sprite_yukle("garbage3.png")
+# Garbage bags
+GARBAGE_BAGS = {
+    GAME_NAMES['garbage_bag1']: load_sprite("sweet_bag.png"),
+    GAME_NAMES['garbage_bag2']: load_sprite("yellow_bag.png"),
+    GAME_NAMES['garbage_bag3']: load_sprite("black_bag.png")
 }
 
-# Arkaplanlar
-ARKAPLANLAR = {
-    'Orman': sprite_yukle("orman.png", (PENCERE_GENISLIK, PENCERE_YUKSEKLIK)),
-    'Sahil': sprite_yukle("beach.png", (PENCERE_GENISLIK, PENCERE_YUKSEKLIK))
+# Backgrounds
+BACKGROUNDS = {
+    GAME_NAMES['background2']: load_sprite("forest.png", (WINDOW_WIDTH, WINDOW_HEIGHT)),
+    GAME_NAMES['background3']: load_sprite("beach.png", (WINDOW_WIDTH, WINDOW_HEIGHT))
 }
 
-# Font oluştur
+# Create fonts
 font = pygame.font.Font(None, 36)
-buyuk_font = pygame.font.Font(None, 48)
-kucuk_font = pygame.font.Font(None, 24)
+large_font = pygame.font.Font(None, 48)
+small_font = pygame.font.Font(None, 24)
 
-# Menü yardımcı fonksiyonlar
-def menu_kutusu_ciz(ekran, kutu_rect, secili=False):
-    if secili:
-        pygame.draw.rect(ekran, KOYU_GRI, kutu_rect, 0, 15)
-        pygame.draw.rect(ekran, CYAN, kutu_rect, 4, 15)
+# Menu helper functions
+def draw_menu_box(screen, box_rect, selected=False):
+    if selected:
+        pygame.draw.rect(screen, DARK_GRAY, box_rect, 0, 15)
+        pygame.draw.rect(screen, CYAN, box_rect, 4, 15)
     else:
-        pygame.draw.rect(ekran, (30, 30, 35), kutu_rect, 0, 15)
-        pygame.draw.rect(ekran, ACIK_GRI, kutu_rect, 2, 15)
+        pygame.draw.rect(screen, (30, 30, 35), box_rect, 0, 15)
+        pygame.draw.rect(screen, LIGHT_GRAY, box_rect, 2, 15)
 
-def skor_satiri_ciz(ekran, i, skor_bilgi, y_pos, pozisyonlar):
-    renkler = [SARI, ACIK_GRI, TURUNCU, CYAN, CYAN, GRI, GRI, GRI, GRI, GRI]
-    renk = renkler[i] if i < len(renkler) else GRI
+def draw_score_line(screen, i, score_info, y_pos, positions):
+    colors = [YELLOW, LIGHT_GRAY, ORANGE, CYAN, CYAN, GRAY, GRAY, GRAY, GRAY, GRAY]
+    color = colors[i] if i < len(colors) else GRAY
     
-    texts = [f"{i+1}.", skor_bilgi['isim'][:12], str(skor_bilgi['skor']), skor_bilgi['zorluk']]
-    for text, x_pos in zip(texts, pozisyonlar):
-        text_surface = kucuk_font.render(text, True, renk)
-        ekran.blit(text_surface, (x_pos, y_pos))
+    texts = [f"{i+1}.", score_info['name'][:12], str(score_info['score']), score_info['difficulty']]
+    for text, x_pos in zip(texts, positions):
+        text_surface = small_font.render(text, True, color)
+        screen.blit(text_surface, (x_pos, y_pos))
 
-# Ayarları kaydetme ve yükleme fonksiyonları
-def ayarlari_kaydet():
-    ayarlar = {
-        'secili_karakter': secili_karakter,
-        'secili_arkaplan': secili_arkaplan,
-        'secili_garbage': secili_garbage
-    }
-    try:
-        with open('ayarlar.json', 'w', encoding='utf-8') as f:
-            json.dump(ayarlar, f, indent=2, ensure_ascii=False)
-    except Exception as e:
-        print(f"Ayarlar kaydedilemedi: {e}")
 
-def ayarlari_yukle():
-    global secili_karakter, secili_arkaplan, secili_garbage
-    try:
-        with open('ayarlar.json', 'r', encoding='utf-8') as f:
-            ayarlar = json.load(f)
-            secili_karakter = ayarlar.get('secili_karakter', "Bahçıvan")
-            secili_arkaplan = ayarlar.get('secili_arkaplan', "Siyah")
-            secili_garbage = ayarlar.get('secili_garbage', "Tatlı Poşet")
-    except (FileNotFoundError, json.JSONDecodeError, KeyError):
-        # Dosya yoksa veya hatalıysa varsayılan değerleri kullan
-        secili_karakter = "Bahçıvan"
-        secili_arkaplan = "Siyah"
-        secili_garbage = "Tatlı Poşet"
+# Game State Management
+class GameState:
+    def __init__(self):
+        self.player_name = ""
+        self.selected_character = GAME_NAMES['character1']
+        self.selected_background = GAME_NAMES['background1']
+        self.selected_garbage = GAME_NAMES['garbage_bag1']
+    
+    def save_settings(self):
+        settings = {
+            'selected_character': self.selected_character,
+            'selected_background': self.selected_background,
+            'selected_garbage': self.selected_garbage
+        }
+        try:
+            with open('settings.json', 'w', encoding='utf-8') as f:
+                json.dump(settings, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"Settings could not be saved: {e}")
+    
+    def load_settings(self):
+        try:
+            with open('settings.json', 'r', encoding='utf-8') as f:
+                settings = json.load(f)
+                self.selected_character = settings.get('selected_character', GAME_NAMES['character1'])
+                self.selected_background = settings.get('selected_background', GAME_NAMES['background1'])
+                self.selected_garbage = settings.get('selected_garbage', GAME_NAMES['garbage_bag1'])
+        except (FileNotFoundError, json.JSONDecodeError, KeyError):
+            # Use default values if file doesn't exist or is corrupted
+            self.selected_character = GAME_NAMES['character1']
+            self.selected_background = GAME_NAMES['background1']
+            self.selected_garbage = GAME_NAMES['garbage_bag1']
 
-# Oyuncu verileri - oyun başlangıcında yüklenecek
-oyuncu_adi = ""
-secili_karakter = "Bahçıvan"
-secili_arkaplan = "Siyah"
-secili_garbage = "Tatlı Poşet"
+# Global game state instance
+game_state = GameState()
 
-class CopToplayici:
-    def __init__(self, karakter_sprite):
-        self.yon_x = 1
-        self.yon_y = 0
-        self.kareler = []
-        self.karakter_sprite = karakter_sprite
-        baslangic_x = (PENCERE_GENISLIK // 2 // KARE_BOYUT) * KARE_BOYUT
-        baslangic_y = (PENCERE_YUKSEKLIK // 2 // KARE_BOYUT) * KARE_BOYUT
-        self.kareler.append((baslangic_x, baslangic_y))
+# Utility Functions
+def safe_exit():
+    """Safely exit the game"""
+    pygame.quit()
+    sys.exit()
 
-    def hareket_et(self):
-        bas_x, bas_y = self.kareler[0]
-        yeni_x = bas_x + self.yon_x * KARE_BOYUT
-        yeni_y = bas_y + self.yon_y * KARE_BOYUT
+def handle_quit_event():
+    """Handle pygame QUIT event"""
+    safe_exit()
+
+class TrashCollector:
+    def __init__(self, character_sprite):
+        self.dir_x = 1
+        self.dir_y = 0
+        self.squares = []
+        self.character_sprite = character_sprite
+        start_x = (WINDOW_WIDTH // 2 // SQUARE_SIZE) * SQUARE_SIZE
+        start_y = (WINDOW_HEIGHT // 2 // SQUARE_SIZE) * SQUARE_SIZE
+        self.squares.append((start_x, start_y))
+
+    def move(self):
+        head_x, head_y = self.squares[0]
+        new_x = head_x + self.dir_x * SQUARE_SIZE
+        new_y = head_y + self.dir_y * SQUARE_SIZE
         
-        UI_ALAN_YUKSEKLIK = 45
+        UI_AREA_HEIGHT = 45
         
-        if yeni_x < 0:
-            yeni_x = PENCERE_GENISLIK - KARE_BOYUT
-        elif yeni_x >= PENCERE_GENISLIK:
-            yeni_x = 0
+        if new_x < 0:
+            new_x = WINDOW_WIDTH - SQUARE_SIZE
+        elif new_x >= WINDOW_WIDTH:
+            new_x = 0
             
-        if yeni_y < UI_ALAN_YUKSEKLIK:
-            yeni_y = PENCERE_YUKSEKLIK - KARE_BOYUT
-        elif yeni_y >= PENCERE_YUKSEKLIK:
-            yeni_y = UI_ALAN_YUKSEKLIK
+        if new_y < UI_AREA_HEIGHT:
+            new_y = WINDOW_HEIGHT - SQUARE_SIZE
+        elif new_y >= WINDOW_HEIGHT:
+            new_y = UI_AREA_HEIGHT
             
-        yeni_bas = (yeni_x, yeni_y)
-        self.kareler = [yeni_bas] + self.kareler[:-1]
+        new_head = (new_x, new_y)
+        self.squares = [new_head] + self.squares[:-1]
 
-    def cop_topla(self):
-        self.kareler.append(self.kareler[-1])
+    def collect_trash(self):
+        self.squares.append(self.squares[-1])
 
-    def ciz(self, ekran):
-        bas_x, bas_y = self.kareler[0]
-        ekran.blit(self.karakter_sprite, (bas_x, bas_y))
-        secili_garbage_sprite = GARBAGE_TURLERI[secili_garbage]
-        for (x, y) in self.kareler[1:]:
-            ekran.blit(secili_garbage_sprite, (x, y))
+    def draw(self, screen):
+        head_x, head_y = self.squares[0]
+        screen.blit(self.character_sprite, (head_x, head_y))
+        selected_garbage_sprite = GARBAGE_BAGS[game_state.selected_garbage]
+        for (x, y) in self.squares[1:]:
+            screen.blit(selected_garbage_sprite, (x, y))
 
-    def carpisma_kontrolu(self):
-        bas = self.kareler[0]
-        return bas in self.kareler[1:]
+    def check_collision(self):
+        head = self.squares[0]
+        return head in self.squares[1:]
 
-class Cop:
+class Trash:
     def __init__(self):
         min_x = 1
-        max_x = (PENCERE_GENISLIK // KARE_BOYUT) - 2
+        max_x = (WINDOW_WIDTH // SQUARE_SIZE) - 2
         min_y = 3
-        max_y = (PENCERE_YUKSEKLIK // KARE_BOYUT) - 2
+        max_y = (WINDOW_HEIGHT // SQUARE_SIZE) - 2
         
-        self.x = random.randint(min_x, max_x) * KARE_BOYUT
-        self.y = random.randint(min_y, max_y) * KARE_BOYUT
+        self.x = random.randint(min_x, max_x) * SQUARE_SIZE
+        self.y = random.randint(min_y, max_y) * SQUARE_SIZE
         
-        self.tur = random.choice(list(COP_SPRITES.keys()))
-        self.sprite = COP_SPRITES[self.tur]
+        self.type = random.choice(list(TRASH_SPRITES.keys()))
+        self.sprite = TRASH_SPRITES[self.type]
     
-    def ciz(self, ekran):
-        ekran.blit(self.sprite, (self.x, self.y))
+    def draw(self, screen):
+        screen.blit(self.sprite, (self.x, self.y))
 
-# Skor tablosu fonksiyonları
-def skor_kaydet(isim, skor, zorluk):
+# Score table functions
+def save_score(name, score, difficulty):
     try:
         with open('highscores.json', 'r') as f:
-            skorlar = json.load(f)
+            scores = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        skorlar = []
+        scores = []
     
-    # Aynı isimli oyuncu var mı kontrol et
-    mevcut_oyuncu_indeks = -1
-    for i, oyuncu in enumerate(skorlar):
-        if oyuncu['isim'] == isim:
-            mevcut_oyuncu_indeks = i
+    # Check if player with same name exists
+    existing_player_index = -1
+    for i, player in enumerate(scores):
+        if player['name'] == name:
+            existing_player_index = i
             break
     
-    yeni_skor = {
-        'isim': isim,
-        'skor': skor,
-        'zorluk': zorluk
+    new_score = {
+        'name': name,
+        'score': score,
+        'difficulty': difficulty
     }
     
-    if mevcut_oyuncu_indeks != -1:
-        # Aynı isimli oyuncu varsa, sadece daha iyi skor ise güncelle
-        if skor > skorlar[mevcut_oyuncu_indeks]['skor']:
-            skorlar[mevcut_oyuncu_indeks] = yeni_skor
+    if existing_player_index != -1:
+        # If player exists, only update if score is better
+        if score > scores[existing_player_index]['score']:
+            scores[existing_player_index] = new_score
     else:
-        # Yeni oyuncu ise ekle
-        skorlar.append(yeni_skor)
+        # Add new player
+        scores.append(new_score)
     
-    skorlar.sort(key=lambda x: x['skor'], reverse=True)
-    skorlar = skorlar[:10]
+    scores.sort(key=lambda x: x['score'], reverse=True)
+    scores = scores[:10]
     
     with open('highscores.json', 'w') as f:
-        json.dump(skorlar, f, indent=2)
+        json.dump(scores, f, indent=2)
 
-def skor_tablosu_goster():
+def show_high_scores():
     try:
         with open('highscores.json', 'r') as f:
-            skorlar = json.load(f)
+            scores = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        skorlar = []
+        scores = []
     
     while True:
-        ekran.fill(SIYAH)
-        baslik = buyuk_font.render('SKOR TABLOSU', True, CYAN)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
-        ekran.blit(baslik, baslik_rect)
+        screen.fill(BLACK)
+        title = large_font.render(GAME_NAMES['high_scores'].upper(), True, CYAN)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
+        screen.blit(title, title_rect)
         
         
-        if not skorlar:
-            mesaj = font.render('Henüz hiç skor kaydedilmemiş!', True, BEYAZ)
-            mesaj_rect = mesaj.get_rect(center=(PENCERE_GENISLIK//2, 200))
-            ekran.blit(mesaj, mesaj_rect)
+        if not scores:
+            message = font.render(GAME_NAMES['no_scores_yet'], True, WHITE)
+            message_rect = message.get_rect(center=(WINDOW_WIDTH//2, 200))
+            screen.blit(message, message_rect)
         else:
             y_pos = 130
-            pozisyonlar = [150, 200, 400, 500]
-            basliklar = ['No.', 'İsim', 'Skor', 'Zorluk']
+            positions = [150, 200, 400, 500]
+            headers = [GAME_NAMES['rank'], GAME_NAMES['name'], GAME_NAMES['score'], GAME_NAMES['difficulty_header']]
             
-            for baslik, x_pos in zip(basliklar, pozisyonlar):
-                text = kucuk_font.render(baslik, True, BEYAZ)
-                ekran.blit(text, (x_pos, y_pos))
+            for header, x_pos in zip(headers, positions):
+                text = small_font.render(header, True, WHITE)
+                screen.blit(text, (x_pos, y_pos))
             
             y_pos += 25
-            pygame.draw.line(ekran, BEYAZ, (pozisyonlar[0], y_pos), (pozisyonlar[-1] + 80, y_pos), 1)
+            pygame.draw.line(screen, WHITE, (positions[0], y_pos), (positions[-1] + 80, y_pos), 1)
             y_pos += 15
             
-            for i, skor_bilgi in enumerate(skorlar[:10]):
-                skor_satiri_ciz(ekran, i, skor_bilgi, y_pos, pozisyonlar)
+            for i, score_info in enumerate(scores[:10]):
+                draw_score_line(screen, i, score_info, y_pos, positions)
                 y_pos += 25
         
-        # Geri dön bilgisi
-        geri = font.render("Geri dönmek için ESC'ye basın", True, GRI)
-        geri_rect = geri.get_rect(center=(PENCERE_GENISLIK//2, 520))
-        ekran.blit(geri, geri_rect)
+        # Back info
+        back_info = font.render(GAME_NAMES['press_esc_back'], True, GRAY)
+        back_rect = back_info.get_rect(center=(WINDOW_WIDTH//2, 520))
+        screen.blit(back_info, back_rect)
         
         pygame.display.flip()
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_ESCAPE or olay.key == pygame.K_RETURN:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN:
                     return
 
-def isim_gir():
-    global oyuncu_adi
-    giris = ""
+def enter_name():
+    input_text = ""
     while True:
-        ekran.fill(SIYAH)
+        screen.fill(BLACK)
         
-        # Başlık
-        baslik = buyuk_font.render('OYUNCU ADI GİR', True, SARI)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 150))
-        ekran.blit(baslik, baslik_rect)
+        # Title
+        title = large_font.render(GAME_NAMES['enter_player_name'], True, YELLOW)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 150))
+        screen.blit(title, title_rect)
         
-        # Giriş kutusu - büyük ve merkezi
-        kutu_rect = pygame.Rect(PENCERE_GENISLIK//2 - 200, 220, 400, 60)
-        pygame.draw.rect(ekran, (30, 30, 30), kutu_rect, 0, 10)
-        pygame.draw.rect(ekran, SARI if giris else GRI, kutu_rect, 3, 10)
+        # Input box 
+        box_rect = pygame.Rect(WINDOW_WIDTH//2 - 200, 220, 400, 60)
+        pygame.draw.rect(screen, (30, 30, 30), box_rect, 0, 10)
+        pygame.draw.rect(screen, YELLOW if input_text else GRAY, box_rect, 3, 10)
         
-        # Yazılan metni göster
-        if giris:
-            text = font.render(giris, True, BEYAZ)
+        # Show written text
+        if input_text:
+            text = font.render(input_text, True, WHITE)
         else:
-            text = font.render("Buraya isminizi yazın...", True, GRI)
-        text_rect = text.get_rect(center=kutu_rect.center)
-        ekran.blit(text, text_rect)
+            text = font.render(GAME_NAMES['type_your_name'], True, GRAY)
+        text_rect = text.get_rect(center=box_rect.center)
+        screen.blit(text, text_rect)
         
-        # İmleç
+        # Cursor
         if pygame.time.get_ticks() % 1000 < 500:
-            if giris:
-                imlek_x = text_rect.right + 3
+            if input_text:
+                cursor_x = text_rect.right + 3
             else:
-                imlek_x = kutu_rect.left + 15
-            pygame.draw.line(ekran, SARI, (imlek_x, kutu_rect.top + 15), (imlek_x, kutu_rect.bottom - 15), 2)
+                cursor_x = box_rect.left + 15
+            pygame.draw.line(screen, YELLOW, (cursor_x, box_rect.top + 15), (cursor_x, box_rect.bottom - 15), 2)
         
-        # Kurallar
-        kural = kucuk_font.render("2-12 karakter arası", True, GRI)
-        kural_rect = kural.get_rect(center=(PENCERE_GENISLIK//2, 300))
-        ekran.blit(kural, kural_rect)
+        # Rules
+        rule = small_font.render(GAME_NAMES['2_12_characters'], True, GRAY)
+        rule_rect = rule.get_rect(center=(WINDOW_WIDTH//2, 300))
+        screen.blit(rule, rule_rect)
         
-        # Talimatlar
-        enter_aktif = len(giris.strip()) >= 2
-        enter_renk = YESIL if enter_aktif else GRI
-        enter_text = font.render("ENTER - Tamam", True, enter_renk)
-        enter_rect = enter_text.get_rect(center=(PENCERE_GENISLIK//2, 380))
-        ekran.blit(enter_text, enter_rect)
+        # Instructions
+        enter_active = len(input_text.strip()) >= 2
+        enter_color = GREEN if enter_active else GRAY
+        enter_text = font.render(GAME_NAMES['press_enter_ok'], True, enter_color)
+        enter_rect = enter_text.get_rect(center=(WINDOW_WIDTH//2, 380))
+        screen.blit(enter_text, enter_rect)
         
-        esc_text = kucuk_font.render("ESC - Geri Dön", True, GRI)
-        esc_rect = esc_text.get_rect(center=(PENCERE_GENISLIK//2, 420))
-        ekran.blit(esc_text, esc_rect)
+        esc_text = small_font.render(GAME_NAMES['press_esc_return'], True, GRAY)
+        esc_rect = esc_text.get_rect(center=(WINDOW_WIDTH//2, 420))
+        screen.blit(esc_text, esc_rect)
         
         pygame.display.flip()
         
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     return False
-                elif olay.key == pygame.K_RETURN:
-                    if len(giris.strip()) >= 2:
-                        oyuncu_adi = giris.strip()
+                elif event.key == pygame.K_RETURN:
+                    if len(input_text.strip()) >= 2:
+                        game_state.player_name = input_text.strip()
                         return True
-                elif olay.key == pygame.K_BACKSPACE:
-                    giris = giris[:-1]
+                elif event.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]
                 else:
-                    if olay.unicode.isprintable() and len(giris) < 12:
-                        giris += olay.unicode
+                    if event.unicode.isprintable() and len(input_text) < 12:
+                        input_text += event.unicode
 
-def karakter_sec():
-    global secili_karakter
-    karakter_isimleri = list(KARAKTERLER.keys())
-    secili = karakter_isimleri.index(secili_karakter) if secili_karakter in karakter_isimleri else 0
+def select_character():
+    character_names = list(CHARACTERS.keys())
+    selected = character_names.index(game_state.selected_character) if game_state.selected_character in character_names else 0
     
     while True:
-        ekran.fill(SIYAH)
+        screen.fill(BLACK)
         
-        baslik = buyuk_font.render('KARAKTER SEÇ', True, CYAN)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
-        ekran.blit(baslik, baslik_rect)
+        title = large_font.render(GAME_NAMES['select_character'].upper(), True, CYAN)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
+        screen.blit(title, title_rect)
         
-        pygame.draw.line(ekran, CYAN, (100, 110), (PENCERE_GENISLIK-100, 110), 3)
+        pygame.draw.line(screen, CYAN, (100, 110), (WINDOW_WIDTH-100, 110), 3)
         
-        # Karakterleri göster
-        baslangic_y = 160
-        for i, isim in enumerate(karakter_isimleri):
-            y = baslangic_y + i * 140
-            secili_mi = (i == secili)
+        # Show characters
+        start_y = 160
+        for i, name in enumerate(character_names):
+            y = start_y + i * 140
+            is_selected = (i == selected)
             
-            kutu_genislik = 500
-            kutu_yukseklik = 120
-            kutu_x = PENCERE_GENISLIK//2 - kutu_genislik//2
-            kutu_rect = pygame.Rect(kutu_x, y-20, kutu_genislik, kutu_yukseklik)
+            box_width = 500
+            box_height = 120
+            box_x = WINDOW_WIDTH//2 - box_width//2
+            box_rect = pygame.Rect(box_x, y-20, box_width, box_height)
             
-            menu_kutusu_ciz(ekran, kutu_rect, secili_mi)
+            draw_menu_box(screen, box_rect, is_selected)
             
-            # Karakter sprite'ını göster
-            karakter_sprite = KARAKTERLER[isim]
-            buyuk_sprite = pygame.transform.scale(karakter_sprite, (80, 80))
-            sprite_rect = buyuk_sprite.get_rect(center=(kutu_x + 80, y + 40))
-            ekran.blit(buyuk_sprite, sprite_rect)
+            # Show character sprite
+            character_sprite = CHARACTERS[name]
+            large_sprite = pygame.transform.scale(character_sprite, (80, 80))
+            sprite_rect = large_sprite.get_rect(center=(box_x + 80, y + 40))
+            screen.blit(large_sprite, sprite_rect)
             
-            renk = CYAN if secili_mi else BEYAZ
-            isim_text = font.render(isim, True, renk)
-            isim_rect = isim_text.get_rect(center=(kutu_x + 280, y + 30))
-            ekran.blit(isim_text, isim_rect)
+            color = CYAN if is_selected else WHITE
+            name_text = font.render(name, True, color)
+            name_rect = name_text.get_rect(center=(box_x + 280, y + 30))
+            screen.blit(name_text, name_rect)
             
-            if isim == secili_karakter:
-                aktif_text = kucuk_font.render("AKTIF", True, NEON_YESIL)
-                aktif_rect = aktif_text.get_rect(center=(kutu_x + 280, y + 60))
-                ekran.blit(aktif_text, aktif_rect)
+            if name == game_state.selected_character:
+                active_text = small_font.render(GAME_NAMES['active'], True, NEON_GREEN)
+                active_rect = active_text.get_rect(center=(box_x + 280, y + 60))
+                screen.blit(active_text, active_rect)
         
         pygame.display.flip()
         
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_ESCAPE:
-                    return  # Ayarlar menüsüne dön
-                elif olay.key == pygame.K_UP:
-                    secili = (secili - 1) % len(karakter_isimleri)
-                elif olay.key == pygame.K_DOWN:
-                    secili = (secili + 1) % len(karakter_isimleri)
-                elif olay.key == pygame.K_RETURN:
-                    secili_karakter = karakter_isimleri[secili]
-                    ayarlari_kaydet()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return  # Return to settings menu
+                elif event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(character_names)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(character_names)
+                elif event.key == pygame.K_RETURN:
+                    game_state.selected_character = character_names[selected]
+                    game_state.save_settings()
                     return
 
-def ana_menu():
-    secenekler = ['Oyuna Başla', 'Skor Tablosu', 'Ayarlar', 'Çıkış']
-    secili = 0
+def main_menu():
+    options = [GAME_NAMES['start_game'], GAME_NAMES['high_scores'], GAME_NAMES['settings'], GAME_NAMES['exit']]
+    selected = 0
     
     while True:
-        ekran.fill(SIYAH)
+        screen.fill(BLACK)
         
-        # Ana başlık
-        baslik = buyuk_font.render('EcoSnake Game', True, CYAN)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 100))
-        ekran.blit(baslik, baslik_rect)
+        # Main title
+        title = large_font.render(GAME_NAMES['game_title'], True, CYAN)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 100))
+        screen.blit(title, title_rect)
         
-        alt_baslik = font.render('Çevreyi Koruma Oyunu', True, NEON_YESIL)
-        alt_rect = alt_baslik.get_rect(center=(PENCERE_GENISLIK//2, 140))
-        ekran.blit(alt_baslik, alt_rect)
+        subtitle = font.render(GAME_NAMES['game_subtitle'], True, NEON_GREEN)
+        subtitle_rect = subtitle.get_rect(center=(WINDOW_WIDTH//2, 140))
+        screen.blit(subtitle, subtitle_rect)
         
-        # Oyuncu bilgileri 
-        karakter_text = kucuk_font.render(f'Karakter: {secili_karakter}', True, BEYAZ)
-        ekran.blit(karakter_text, (20, 20))
-        arkaplan_text = kucuk_font.render(f'Arkaplan: {secili_arkaplan}', True, BEYAZ)
-        ekran.blit(arkaplan_text, (20, 40))
-        garbage_text = kucuk_font.render(f'Çöp Poşeti: {secili_garbage}', True, BEYAZ)
-        ekran.blit(garbage_text, (20, 60))
+        # Player info 
+        character_text = small_font.render(f'{GAME_NAMES["character_info"]}: {game_state.selected_character}', True, WHITE)
+        screen.blit(character_text, (20, 20))
+        background_text = small_font.render(f'{GAME_NAMES["background_info"]}: {game_state.selected_background}', True, WHITE)
+        screen.blit(background_text, (20, 40))
+        garbage_text = small_font.render(f'{GAME_NAMES["garbage_bag_info"]}: {game_state.selected_garbage}', True, WHITE)
+        screen.blit(garbage_text, (20, 60))
         
-        # Menü seçenekleri
-        menu_baslangic_y = 220
-        for i, secenek in enumerate(secenekler):
-            renk = BEYAZ if i == secili else ACIK_GRI
-            y = menu_baslangic_y + i * 60
+        # Menu options
+        menu_start_y = 220
+        for i, option in enumerate(options):
+            color = WHITE if i == selected else LIGHT_GRAY
+            y = menu_start_y + i * 60
             
-            if i == secili:
-                pygame.draw.rect(ekran, KOYU_GRI, (280, y-25, 240, 50), 0, 12)
-                pygame.draw.rect(ekran, CYAN, (280, y-25, 240, 50), 3, 12)
-                pygame.draw.rect(ekran, (52, 73, 94), (285, y-20, 230, 40), 0, 10)
+            if i == selected:
+                pygame.draw.rect(screen, DARK_GRAY, (250, y-25, 300, 50), 0, 12)
+                pygame.draw.rect(screen, CYAN, (250, y-25, 300, 50), 3, 12)
+                pygame.draw.rect(screen, (52, 73, 94), (255, y-20, 290, 40), 0, 10)
             
-            text = font.render(secenek, True, renk)
-            text_rect = text.get_rect(center=(PENCERE_GENISLIK//2, y))
-            ekran.blit(text, text_rect)
+            text = font.render(option, True, color)
+            text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
+            screen.blit(text, text_rect)
         
-        # Talimatlar
-        talim = kucuk_font.render("Yön tuşları ile seç, ENTER ile onayla, ESC ile çık", True, GRI)
-        talim_rect = talim.get_rect(center=(PENCERE_GENISLIK//2, 520))
-        ekran.blit(talim, talim_rect)
+        # Instructions
+        instructions = small_font.render(GAME_NAMES['arrow_keys_select'], True, GRAY)
+        instructions_rect = instructions.get_rect(center=(WINDOW_WIDTH//2, 520))
+        screen.blit(instructions, instructions_rect)
         
         pygame.display.flip()
         
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-                elif olay.key == pygame.K_UP:
-                    secili = (secili - 1) % len(secenekler)
-                elif olay.key == pygame.K_DOWN:
-                    secili = (secili + 1) % len(secenekler)
-                elif olay.key == pygame.K_RETURN:
-                    if secili == 0:  # Oyuna Başla
-                        return 'oyun'
-                    elif secili == 1:  # Skor Tablosu
-                        skor_tablosu_goster()
-                    elif secili == 2:  # Ayarlar
-                        return 'ayarlar'
-                    elif secili == 3:  # Çıkış
+                elif event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(options)
+                elif event.key == pygame.K_RETURN:
+                    if selected == 0:  # Start Game
+                        return 'game'
+                    elif selected == 1:  # High Scores
+                        show_high_scores()
+                    elif selected == 2:  # Settings
+                        return 'settings'
+                    elif selected == 3:  # Exit
                         pygame.quit()
                         sys.exit()
 
-def ayarlar_menu():
-    secenekler = ['Karakter Seç', 'Arkaplan Seç', 'Çöp Poşeti Seç']
-    secili = 0
+def settings_menu():
+    options = [GAME_NAMES['select_character'], GAME_NAMES['select_background'], GAME_NAMES['select_garbage_bag']]
+    selected = 0
     
     while True:
-        ekran.fill(SIYAH)
+        screen.fill(BLACK)
         
-        baslik = buyuk_font.render('AYARLAR', True, CYAN)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
-        ekran.blit(baslik, baslik_rect)
+        title = large_font.render(GAME_NAMES['settings'].upper(), True, CYAN)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
+        screen.blit(title, title_rect)
         
-        pygame.draw.line(ekran, CYAN, (100, 110), (PENCERE_GENISLIK-100, 110), 3)
-        pygame.draw.line(ekran, KOYU_GRI, (100, 112), (PENCERE_GENISLIK-100, 112), 1)
+        pygame.draw.line(screen, CYAN, (100, 110), (WINDOW_WIDTH-100, 110), 3)
+        pygame.draw.line(screen, DARK_GRAY, (100, 112), (WINDOW_WIDTH-100, 112), 1)
         
-        # Menü seçenekleri
-        menu_baslangic_y = 160
-        for i, secenek in enumerate(secenekler):
-            renk = BEYAZ if i == secili else ACIK_GRI
-            y = menu_baslangic_y + i * 60
+        # Menu options
+        menu_start_y = 160
+        for i, option in enumerate(options):
+            color = WHITE if i == selected else LIGHT_GRAY
+            y = menu_start_y + i * 60
             
-            if i == secili:
-                pygame.draw.rect(ekran, KOYU_GRI, (280, y-25, 240, 50), 0, 10)
-                pygame.draw.rect(ekran, CYAN, (280, y-25, 240, 50), 3, 10)
+            if i == selected:
+                pygame.draw.rect(screen, DARK_GRAY, (250, y-25, 300, 50), 0, 10)
+                pygame.draw.rect(screen, CYAN, (250, y-25, 300, 50), 3, 10)
             
-            text = font.render(secenek, True, renk)
-            text_rect = text.get_rect(center=(PENCERE_GENISLIK//2, y))
-            ekran.blit(text, text_rect)
+            text = font.render(option, True, color)
+            text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
+            screen.blit(text, text_rect)
         
-        # Geri dön bilgisi
-        geri = font.render("Geri dönmek için ESC'ye basın", True, GRI)
-        geri_rect = geri.get_rect(center=(PENCERE_GENISLIK//2, 420))
-        ekran.blit(geri, geri_rect)
+        # Back info
+        back_info = font.render(GAME_NAMES['press_esc_back'], True, GRAY)
+        back_rect = back_info.get_rect(center=(WINDOW_WIDTH//2, 420))
+        screen.blit(back_info, back_rect)
         
         pygame.display.flip()
         
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     return
-                elif olay.key == pygame.K_UP:
-                    secili = (secili - 1) % len(secenekler)
-                elif olay.key == pygame.K_DOWN:
-                    secili = (secili + 1) % len(secenekler)
-                elif olay.key == pygame.K_RETURN:
-                    if secili == 0:  # Karakter Seç
-                        karakter_sec()
-                    elif secili == 1:  # Arkaplan Seç
-                        arkaplan_sec()
-                    elif secili == 2:  # Çöp Türü Seç
-                        garbage_sec()
+                elif event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(options)
+                elif event.key == pygame.K_RETURN:
+                    if selected == 0:  # Select Character
+                        select_character()
+                    elif selected == 1:  # Select Background
+                        select_background()
+                    elif selected == 2:  # Select Garbage Bag
+                        select_garbage_bag()
 
-def arkaplan_sec():
-    global secili_arkaplan
-    secenekler = ['Siyah', 'Orman', 'Sahil']
-    secili = secenekler.index(secili_arkaplan) if secili_arkaplan in secenekler else 0
+def select_background():
+    options = [GAME_NAMES['background1'], GAME_NAMES['background2'], GAME_NAMES['background3']]
+    selected = options.index(game_state.selected_background) if game_state.selected_background in options else 0
     
     while True:
-        ekran.fill(SIYAH)
+        screen.fill(BLACK)
         
-        baslik = buyuk_font.render('ARKAPLAN SEÇ', True, CYAN)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
-        ekran.blit(baslik, baslik_rect)
+        title = large_font.render(GAME_NAMES['select_background'].upper(), True, CYAN)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
+        screen.blit(title, title_rect)
         
-        pygame.draw.line(ekran, CYAN, (100, 110), (PENCERE_GENISLIK-100, 110), 3)
+        pygame.draw.line(screen, CYAN, (100, 110), (WINDOW_WIDTH-100, 110), 3)
         
-        # Arkaplanları göster
-        baslangic_y = 160
-        for i, isim in enumerate(secenekler):
-            y = baslangic_y + i * 140
-            secili_mi = (i == secili)
+        # Show backgrounds
+        start_y = 160
+        for i, name in enumerate(options):
+            y = start_y + i * 140
+            is_selected = (i == selected)
             
-            kutu_genislik = 500
-            kutu_yukseklik = 120
-            kutu_x = PENCERE_GENISLIK//2 - kutu_genislik//2
-            kutu_rect = pygame.Rect(kutu_x, y-20, kutu_genislik, kutu_yukseklik)
+            box_width = 500
+            box_height = 120
+            box_x = WINDOW_WIDTH//2 - box_width//2
+            box_rect = pygame.Rect(box_x, y-20, box_width, box_height)
             
-            menu_kutusu_ciz(ekran, kutu_rect, secili_mi)
+            draw_menu_box(screen, box_rect, is_selected)
             
-            # Arkaplan önizlemesi
-            if isim == 'Siyah':
-                onizleme_rect = pygame.Rect(0, 0, 80, 80)
-                onizleme_rect.center = (kutu_x + 80, y + 40)
-                pygame.draw.rect(ekran, SIYAH, onizleme_rect, 0, 5)
-            elif isim in ARKAPLANLAR:
+            # Background preview
+            if name == GAME_NAMES['background1']:
+                preview_rect = pygame.Rect(0, 0, 80, 80)
+                preview_rect.center = (box_x + 80, y + 40)
+                pygame.draw.rect(screen, BLACK, preview_rect, 0, 5)
+            elif name in BACKGROUNDS:
                 try:
-                    onizleme = pygame.transform.scale(ARKAPLANLAR[isim], (80, 80))
-                    sprite_rect = onizleme.get_rect(center=(kutu_x + 80, y + 40))
-                    ekran.blit(onizleme, sprite_rect)
-                except:
-                    renk = (0, 100, 0) if isim == 'Orman' else (30, 144, 255)
-                    onizleme_rect = pygame.Rect(0, 0, 80, 80)
-                    onizleme_rect.center = (kutu_x + 80, y + 40)
-                    pygame.draw.rect(ekran, renk, onizleme_rect, 0, 5)
+                    preview = pygame.transform.scale(BACKGROUNDS[name], (80, 80))
+                    sprite_rect = preview.get_rect(center=(box_x + 80, y + 40))
+                    screen.blit(preview, sprite_rect)
+                except (pygame.error, ValueError, TypeError):
+                    color = (0, 100, 0) if name == GAME_NAMES['background2'] else (30, 144, 255)
+                    preview_rect = pygame.Rect(0, 0, 80, 80)
+                    preview_rect.center = (box_x + 80, y + 40)
+                    pygame.draw.rect(screen, color, preview_rect, 0, 5)
             
-            renk = CYAN if secili_mi else BEYAZ
-            isim_text = font.render(isim, True, renk)
-            isim_rect = isim_text.get_rect(center=(kutu_x + 280, y + 30))
-            ekran.blit(isim_text, isim_rect)
+            color = CYAN if is_selected else WHITE
+            name_text = font.render(name, True, color)
+            name_rect = name_text.get_rect(center=(box_x + 280, y + 30))
+            screen.blit(name_text, name_rect)
             
-            if isim == secili_arkaplan:
-                aktif_text = kucuk_font.render("AKTIF", True, NEON_YESIL)
-                aktif_rect = aktif_text.get_rect(center=(kutu_x + 280, y + 60))
-                ekran.blit(aktif_text, aktif_rect)
+            if name == game_state.selected_background:
+                active_text = small_font.render(GAME_NAMES['active'], True, NEON_GREEN)
+                active_rect = active_text.get_rect(center=(box_x + 280, y + 60))
+                screen.blit(active_text, active_rect)
         
         pygame.display.flip()
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_UP:
-                    secili = (secili - 1) % len(secenekler)
-                elif olay.key == pygame.K_DOWN:
-                    secili = (secili + 1) % len(secenekler)
-                elif olay.key == pygame.K_RETURN or olay.key == pygame.K_SPACE:
-                    secili_arkaplan = secenekler[secili]
-                    ayarlari_kaydet()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(options)
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    game_state.selected_background = options[selected]
+                    game_state.save_settings()
                     return
-                elif olay.key == pygame.K_ESCAPE:
+                elif event.key == pygame.K_ESCAPE:
                     return
 
-def garbage_sec():
-    global secili_garbage
-    secenekler = list(GARBAGE_TURLERI.keys())
-    secili = secenekler.index(secili_garbage) if secili_garbage in secenekler else 0
+def select_garbage_bag():
+    options = list(GARBAGE_BAGS.keys())
+    selected = options.index(game_state.selected_garbage) if game_state.selected_garbage in options else 0
     
     while True:
-        ekran.fill(SIYAH)
+        screen.fill(BLACK)
         
-        baslik = buyuk_font.render('ÇÖP POŞETİ SEÇ', True, CYAN)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 80))
-        ekran.blit(baslik, baslik_rect)
+        title = large_font.render(GAME_NAMES['select_garbage_bag'].upper(), True, CYAN)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
+        screen.blit(title, title_rect)
         
-        pygame.draw.line(ekran, CYAN, (100, 110), (PENCERE_GENISLIK-100, 110), 3)
+        pygame.draw.line(screen, CYAN, (100, 110), (WINDOW_WIDTH-100, 110), 3)
         
-        # Poşetleri göster
-        baslangic_y = 160
-        for i, isim in enumerate(secenekler):
-            y = baslangic_y + i * 140
-            secili_mi = (i == secili)
+        # Show garbage bags
+        start_y = 160
+        for i, name in enumerate(options):
+            y = start_y + i * 140
+            is_selected = (i == selected)
             
-            kutu_genislik = 500
-            kutu_yukseklik = 120
-            kutu_x = PENCERE_GENISLIK//2 - kutu_genislik//2
-            kutu_rect = pygame.Rect(kutu_x, y-20, kutu_genislik, kutu_yukseklik)
+            box_width = 500
+            box_height = 120
+            box_x = WINDOW_WIDTH//2 - box_width//2
+            box_rect = pygame.Rect(box_x, y-20, box_width, box_height)
             
-            menu_kutusu_ciz(ekran, kutu_rect, secili_mi)
+            draw_menu_box(screen, box_rect, is_selected)
             
-            # Poşet sprite'ını göster
-            garbage_sprite = GARBAGE_TURLERI[isim]
-            buyuk_sprite = pygame.transform.scale(garbage_sprite, (80, 80))
-            sprite_rect = buyuk_sprite.get_rect(center=(kutu_x + 80, y + 40))
-            ekran.blit(buyuk_sprite, sprite_rect)
+            # Show garbage bag sprite
+            garbage_sprite = GARBAGE_BAGS[name]
+            large_sprite = pygame.transform.scale(garbage_sprite, (80, 80))
+            sprite_rect = large_sprite.get_rect(center=(box_x + 80, y + 40))
+            screen.blit(large_sprite, sprite_rect)
             
-            renk = CYAN if secili_mi else BEYAZ
-            isim_text = font.render(isim, True, renk)
-            isim_rect = isim_text.get_rect(center=(kutu_x + 280, y + 30))
-            ekran.blit(isim_text, isim_rect)
+            color = CYAN if is_selected else WHITE
+            name_text = font.render(name, True, color)
+            name_rect = name_text.get_rect(center=(box_x + 280, y + 30))
+            screen.blit(name_text, name_rect)
             
-            if isim == secili_garbage:
-                aktif_text = kucuk_font.render("AKTIF", True, NEON_YESIL)
-                aktif_rect = aktif_text.get_rect(center=(kutu_x + 280, y + 60))
-                ekran.blit(aktif_text, aktif_rect)
+            if name == game_state.selected_garbage:
+                active_text = small_font.render(GAME_NAMES['active'], True, NEON_GREEN)
+                active_rect = active_text.get_rect(center=(box_x + 280, y + 60))
+                screen.blit(active_text, active_rect)
         
         pygame.display.flip()
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_UP:
-                    secili = (secili - 1) % len(secenekler)
-                elif olay.key == pygame.K_DOWN:
-                    secili = (secili + 1) % len(secenekler)
-                elif olay.key == pygame.K_RETURN or olay.key == pygame.K_SPACE:
-                    secili_garbage = secenekler[secili]
-                    ayarlari_kaydet()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(options)
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    game_state.selected_garbage = options[selected]
+                    game_state.save_settings()
                     return
-                elif olay.key == pygame.K_ESCAPE:
+                elif event.key == pygame.K_ESCAPE:
                     return
 
-def zorluk_sec():
-    secenekler = list(HIZLAR.keys())
-    secili = 0
+def select_difficulty():
+    options = list(SPEEDS.keys())
+    selected = 0
     while True:
-        ekran.fill(SIYAH)
-        baslik = font.render('Zorluk Seç:', True, BEYAZ)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 150))
-        ekran.blit(baslik, baslik_rect)
+        screen.fill(BLACK)
+        title = font.render(GAME_NAMES['select_difficulty'], True, WHITE)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 150))
+        screen.blit(title, title_rect)
         
-        for i, isim in enumerate(secenekler):
-            zorluk_rengi = ZORLUK_RENKLERI[isim]
-            if i == secili:
-                # Seçili zorluk için kutu çiz
-                pygame.draw.rect(ekran, KOYU_GRI, (PENCERE_GENISLIK//2 - 100, 220 + i*50 - 20, 200, 40), 0, 10)
-                pygame.draw.rect(ekran, zorluk_rengi, (PENCERE_GENISLIK//2 - 100, 220 + i*50 - 20, 200, 40), 3, 10)
-                renk = zorluk_rengi
+        for i, name in enumerate(options):
+            difficulty_color = DIFFICULTY_COLORS[name]
+            if i == selected:
+                # Draw box for selected difficulty
+                pygame.draw.rect(screen, DARK_GRAY, (WINDOW_WIDTH//2 - 130, 220 + i*50 - 20, 260, 40), 0, 10)
+                pygame.draw.rect(screen, difficulty_color, (WINDOW_WIDTH//2 - 130, 220 + i*50 - 20, 260, 40), 3, 10)
+                color = difficulty_color
             else:
-                renk = zorluk_rengi
+                color = difficulty_color
                 
             y = 220 + i*50
-            secenek = font.render(isim, True, renk)
-            secenek_rect = secenek.get_rect(center=(PENCERE_GENISLIK//2, y))
-            ekran.blit(secenek, secenek_rect)
+            option = font.render(name, True, color)
+            option_rect = option.get_rect(center=(WINDOW_WIDTH//2, y))
+            screen.blit(option, option_rect)
         
-        # ESC ile çıkış bilgisi
-        cikis_bilgi = font.render("Çıkmak için ESC'ye bas", True, GRI)
-        cikis_rect = cikis_bilgi.get_rect(center=(PENCERE_GENISLIK//2, 450))
-        ekran.blit(cikis_bilgi, cikis_rect)
+        # ESC exit info
+        exit_info = font.render(GAME_NAMES['press_esc_exit'], True, GRAY)
+        exit_rect = exit_info.get_rect(center=(WINDOW_WIDTH//2, 450))
+        screen.blit(exit_info, exit_rect)
         
         pygame.display.flip()
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_UP:
-                    secili = (secili - 1) % len(secenekler)
-                elif olay.key == pygame.K_DOWN:
-                    secili = (secili + 1) % len(secenekler)
-                elif olay.key == pygame.K_RETURN or olay.key == pygame.K_SPACE:
-                    return HIZLAR[secenekler[secili]], secenekler[secili]
-                elif olay.key == pygame.K_ESCAPE:
-                    return None, None  # Ana menüye dön
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(options)
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    return SPEEDS[options[selected]], options[selected]
+                elif event.key == pygame.K_ESCAPE:
+                    return None, None  # Return to main menu
 
-def oyun_bitti_ekrani(skor, zorluk_ismi):
-    skor_kaydet(oyuncu_adi, skor, zorluk_ismi)
+def game_over_screen(score, difficulty_name):
+    save_score(game_state.player_name, score, difficulty_name)
     
     while True:
-        ekran.fill(SIYAH)
+        screen.fill(BLACK)
 
-        baslik = buyuk_font.render('OYUN BİTTİ!', True, KIRMIZI)
-        baslik_rect = baslik.get_rect(center=(PENCERE_GENISLIK//2, 100))
-        ekran.blit(baslik, baslik_rect)
+        title = large_font.render(GAME_NAMES['game_over'].upper(), True, RED)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 100))
+        screen.blit(title, title_rect)
         
-        # Oyun sonucu bilgileri
-        oyuncu_text = font.render(f'Oyuncu: {oyuncu_adi}', True, MOR)
-        oyuncu_rect = oyuncu_text.get_rect(center=(PENCERE_GENISLIK//2, 170))
-        ekran.blit(oyuncu_text, oyuncu_rect)
+        # Game result info
+        player_text = font.render(f'{GAME_NAMES["player"]}: {game_state.player_name}', True, PURPLE)
+        player_rect = player_text.get_rect(center=(WINDOW_WIDTH//2, 170))
+        screen.blit(player_text, player_rect)
         
-        skor_text = font.render(f'Toplanan Çöp: {skor}', True, NEON_YESIL)
-        skor_rect = skor_text.get_rect(center=(PENCERE_GENISLIK//2, 200))
-        ekran.blit(skor_text, skor_rect)
+        score_text = font.render(f'{GAME_NAMES["collected_trash"]}: {score}', True, NEON_GREEN)
+        score_rect = score_text.get_rect(center=(WINDOW_WIDTH//2, 200))
+        screen.blit(score_text, score_rect)
         
-        zorluk_rengi = ZORLUK_RENKLERI.get(zorluk_ismi, ACIK_GRI)
+        difficulty_color = DIFFICULTY_COLORS.get(difficulty_name, LIGHT_GRAY)
         
-        # "Zorluk:" etiketini beyaz yaz
-        zorluk_etiket = font.render('Zorluk: ', True, BEYAZ)
-        zorluk_etiket_rect = zorluk_etiket.get_rect()
+        # Write "Difficulty:" label in white
+        difficulty_label = font.render(f'{GAME_NAMES["difficulty"]}: ', True, WHITE)
+        difficulty_label_rect = difficulty_label.get_rect()
         
-        # Zorluk seviyesini renkli yaz
-        zorluk_seviye = font.render(zorluk_ismi, True, zorluk_rengi)
-        zorluk_seviye_rect = zorluk_seviye.get_rect()
+        # Write difficulty level in color
+        difficulty_level = font.render(difficulty_name, True, difficulty_color)
+        difficulty_level_rect = difficulty_level.get_rect()
         
-        # İki metni yan yana hizala
-        toplam_genislik = zorluk_etiket_rect.width + zorluk_seviye_rect.width
-        baslangic_x = (PENCERE_GENISLIK - toplam_genislik) // 2
+        # Align two texts side by side
+        total_width = difficulty_label_rect.width + difficulty_level_rect.width
+        start_x = (WINDOW_WIDTH - total_width) // 2
         
-        zorluk_etiket_rect.x = baslangic_x
-        zorluk_etiket_rect.centery = 230
-        ekran.blit(zorluk_etiket, zorluk_etiket_rect)
+        difficulty_label_rect.x = start_x
+        difficulty_label_rect.centery = 230
+        screen.blit(difficulty_label, difficulty_label_rect)
         
-        zorluk_seviye_rect.x = baslangic_x + zorluk_etiket_rect.width
-        zorluk_seviye_rect.centery = 230
-        ekran.blit(zorluk_seviye, zorluk_seviye_rect)
+        difficulty_level_rect.x = start_x + difficulty_label_rect.width
+        difficulty_level_rect.centery = 230
+        screen.blit(difficulty_level, difficulty_level_rect)
         
-        sosyal = font.render("Daha temiz bir dünya için çöpünü yere atma!", True, NEON_YESIL)
-        sosyal_rect = sosyal.get_rect(center=(PENCERE_GENISLIK//2, 290))
-        ekran.blit(sosyal, sosyal_rect)
+        environmental_msg = font.render(GAME_NAMES['environmental_message'], True, NEON_GREEN)
+        environmental_rect = environmental_msg.get_rect(center=(WINDOW_WIDTH//2, 290))
+        screen.blit(environmental_msg, environmental_rect)
         
-        # Seçenekleri vurgulu şekilde çiz
+        # Draw options with highlighting
         
-        # ENTER seçeneği
-        enter_text1 = font.render("Tekrar oynamak için ", True, BEYAZ)
-        enter_text2 = font.render("ENTER", True, SARI)
-        enter_text3 = font.render("'a bas", True, BEYAZ)
+        # ENTER option
+        enter_prefix = font.render('Press ', True, WHITE)
+        enter_key = font.render('ENTER', True, NEON_GREEN)
+        enter_suffix = font.render(' to play again', True, WHITE)
         
-        toplam_genislik = enter_text1.get_width() + enter_text2.get_width() + enter_text3.get_width()
-        baslangic_x = (PENCERE_GENISLIK - toplam_genislik) // 2
+        total_enter_width = enter_prefix.get_width() + enter_key.get_width() + enter_suffix.get_width()
+        enter_start_x = (WINDOW_WIDTH - total_enter_width) // 2
+        enter_y = 350
         
-        ekran.blit(enter_text1, (baslangic_x, 350))
-        ekran.blit(enter_text2, (baslangic_x + enter_text1.get_width(), 350))
-        ekran.blit(enter_text3, (baslangic_x + enter_text1.get_width() + enter_text2.get_width(), 350))
+        screen.blit(enter_prefix, (enter_start_x, enter_y))
+        screen.blit(enter_key, (enter_start_x + enter_prefix.get_width(), enter_y))
+        screen.blit(enter_suffix, (enter_start_x + enter_prefix.get_width() + enter_key.get_width(), enter_y))
         
-        # S seçeneği
-        s_text1 = font.render("Skor tablosunu görmek için ", True, BEYAZ)
-        s_text2 = font.render("S", True, SARI)
-        s_text3 = font.render("'ye bas", True, BEYAZ)
+        # S option
+        s_prefix = font.render('Press ', True, WHITE)
+        s_key = font.render('S', True, YELLOW)
+        s_suffix = font.render(' to show scores', True, WHITE)
         
-        toplam_genislik = s_text1.get_width() + s_text2.get_width() + s_text3.get_width()
-        baslangic_x = (PENCERE_GENISLIK - toplam_genislik) // 2
+        total_s_width = s_prefix.get_width() + s_key.get_width() + s_suffix.get_width()
+        s_start_x = (WINDOW_WIDTH - total_s_width) // 2
+        s_y = 380
         
-        ekran.blit(s_text1, (baslangic_x, 380))
-        ekran.blit(s_text2, (baslangic_x + s_text1.get_width(), 380))
-        ekran.blit(s_text3, (baslangic_x + s_text1.get_width() + s_text2.get_width(), 380))
+        screen.blit(s_prefix, (s_start_x, s_y))
+        screen.blit(s_key, (s_start_x + s_prefix.get_width(), s_y))
+        screen.blit(s_suffix, (s_start_x + s_prefix.get_width() + s_key.get_width(), s_y))
         
-        # ESC seçeneği
-        esc_text1 = font.render("Ana menü için ", True, BEYAZ)
-        esc_text2 = font.render("ESC", True, SARI)
-        esc_text3 = font.render("'ye bas", True, BEYAZ)
+        # ESC option
+        esc_prefix = font.render('Press ', True, WHITE)
+        esc_key = font.render('ESC', True, RED)
+        esc_suffix = font.render(' for main menu', True, WHITE)
         
-        toplam_genislik = esc_text1.get_width() + esc_text2.get_width() + esc_text3.get_width()
-        baslangic_x = (PENCERE_GENISLIK - toplam_genislik) // 2
+        total_esc_width = esc_prefix.get_width() + esc_key.get_width() + esc_suffix.get_width()
+        esc_start_x = (WINDOW_WIDTH - total_esc_width) // 2
+        esc_y = 410
         
-        ekran.blit(esc_text1, (baslangic_x, 410))
-        ekran.blit(esc_text2, (baslangic_x + esc_text1.get_width(), 410))
-        ekran.blit(esc_text3, (baslangic_x + esc_text1.get_width() + esc_text2.get_width(), 410))
+        screen.blit(esc_prefix, (esc_start_x, esc_y))
+        screen.blit(esc_key, (esc_start_x + esc_prefix.get_width(), esc_y))
+        screen.blit(esc_suffix, (esc_start_x + esc_prefix.get_width() + esc_key.get_width(), esc_y))
         
         pygame.display.flip()
-        for olay in pygame.event.get():
-            if olay.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if olay.type == pygame.KEYDOWN:
-                if olay.key == pygame.K_RETURN:
-                    return 'tekrar'
-                elif olay.key == pygame.K_s:
-                    skor_tablosu_goster()
-                elif olay.key == pygame.K_ESCAPE:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    return 'replay'
+                elif event.key == pygame.K_s:
+                    show_high_scores()
+                elif event.key == pygame.K_ESCAPE:
                     return 'menu'
 
 def main():
-    global FPS, oyuncu_adi, secili_karakter, secili_arkaplan
+    global FPS
     
-    # Oyun başlangıcında ayarları yükle
-    ayarlari_yukle()
+    # Load settings at game start
+    game_state.load_settings()
     
     while True:
-        menu_secim = ana_menu()
+        menu_choice = main_menu()
         
-        if menu_secim == 'ayarlar':
-            ayarlar_menu()
+        if menu_choice == 'settings':
+            settings_menu()
             continue
-        elif menu_secim != 'oyun':
+        elif menu_choice != 'game':
             continue
         
-        # Oyuncu adı ve zorluk seçimi
-        oyun_hizi = None
-        zorluk_ismi = None
+        # Player name and difficulty selection
+        game_speed = None
+        difficulty_name = None
         
         while True:
-            if not isim_gir():
+            if not enter_name():
                 break
             
-            oyun_hizi, zorluk_ismi = zorluk_sec()
+            game_speed, difficulty_name = select_difficulty()
             
-            if oyun_hizi is None or zorluk_ismi is None:
-                oyuncu_adi = ""
+            if game_speed is None or difficulty_name is None:
+                game_state.player_name = ""
                 continue
             else:
                 break
         
-        if oyun_hizi is None or zorluk_ismi is None:
+        if game_speed is None or difficulty_name is None:
             continue
         
-        # Oyun döngüsü
+        # Game loop
         while True:
-            toplayici = CopToplayici(KARAKTERLER[secili_karakter])
-            cop = Cop()
-            skor = 0
-            son_yon = (1, 0)
-            buyu = False
-            oyun_bitti = False
-            ana_menuye_don = False
-            frame_sayac = 0
+            collector = TrashCollector(CHARACTERS[game_state.selected_character])
+            trash = Trash()
+            score = 0
+            last_dir = (1, 0)
+            grow = False
+            game_over = False
+            return_to_main = False
+            frame_counter = 0
             
-            while not oyun_bitti and not ana_menuye_don:
-                for olay in pygame.event.get():
-                    if olay.type == pygame.QUIT:
+            while not game_over and not return_to_main:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-                    if olay.type == pygame.KEYDOWN:
-                        if olay.key == pygame.K_ESCAPE:
-                            ana_menuye_don = True
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            return_to_main = True
                             break
                         
-                        yeni_yon = None
-                        if olay.key == pygame.K_UP and son_yon != (0, 1):
-                            yeni_yon = (0, -1)
-                        elif olay.key == pygame.K_DOWN and son_yon != (0, -1):
-                            yeni_yon = (0, 1)
-                        elif olay.key == pygame.K_LEFT and son_yon != (1, 0):
-                            yeni_yon = (-1, 0)
-                        elif olay.key == pygame.K_RIGHT and son_yon != (-1, 0):
-                            yeni_yon = (1, 0)
-                        if yeni_yon:
-                            toplayici.yon_x, toplayici.yon_y = yeni_yon
-                            son_yon = yeni_yon
+                        new_dir = None
+                        if event.key == pygame.K_UP and last_dir != (0, 1):
+                            new_dir = (0, -1)
+                        elif event.key == pygame.K_DOWN and last_dir != (0, -1):
+                            new_dir = (0, 1)
+                        elif event.key == pygame.K_LEFT and last_dir != (1, 0):
+                            new_dir = (-1, 0)
+                        elif event.key == pygame.K_RIGHT and last_dir != (-1, 0):
+                            new_dir = (1, 0)
+                        if new_dir:
+                            collector.dir_x, collector.dir_y = new_dir
+                            last_dir = new_dir
 
-                frame_sayac += 1
+                frame_counter += 1
                 
-                hareket_zamani = False
-                if frame_sayac >= (60 // oyun_hizi):
-                    frame_sayac = 0
-                    hareket_zamani = True
-                    eski_kuyruk = toplayici.kareler[-1]
-                    toplayici.hareket_et()
+                move_time = False
+                if frame_counter >= (60 // game_speed):
+                    frame_counter = 0
+                    move_time = True
+                    old_tail = collector.squares[-1]
+                    collector.move()
                     
-                    # Hareket ettikten hemen sonra çarpışma kontrolü yap
-                    if toplayici.carpisma_kontrolu():
-                        oyun_bitti = True
+                    # Check collision right after movement
+                    if collector.check_collision():
+                        game_over = True
                         break
                 
-                bas_x, bas_y = toplayici.kareler[0]
+                head_x, head_y = collector.squares[0]
                 
-                carpisma_var = (abs(bas_x - cop.x) <= KARE_BOYUT//2) and (abs(bas_y - cop.y) <= KARE_BOYUT//2)
+                collision = (abs(head_x - trash.x) <= SQUARE_SIZE//2) and (abs(head_y - trash.y) <= SQUARE_SIZE//2)
                 
-                if carpisma_var:
-                    if hareket_zamani:
-                        toplayici.kareler.append(eski_kuyruk)
+                if collision:
+                    if move_time:
+                        collector.squares.append(old_tail)
                     else:
-                        toplayici.kareler.append(toplayici.kareler[-1])
+                        collector.squares.append(collector.squares[-1])
                     
-                    skor += 1
-                    cop = Cop()
+                    score += 1
+                    trash = Trash()
 
-                # Arkaplanı çiz
-                if secili_arkaplan in ARKAPLANLAR:
-                    ekran.blit(ARKAPLANLAR[secili_arkaplan], (0, 0))
+                # Draw background
+                if game_state.selected_background in BACKGROUNDS:
+                    screen.blit(BACKGROUNDS[game_state.selected_background], (0, 0))
                 else:
-                    ekran.fill(SIYAH)
+                    screen.fill(BLACK)
                     
-                toplayici.ciz(ekran)
-                cop.ciz(ekran)
+                collector.draw(screen)
+                trash.draw(screen)
                 
-                pygame.draw.rect(ekran, KOYU_GRI, (0, 0, PENCERE_GENISLIK, 45))
-                pygame.draw.rect(ekran, ACIK_GRI, (0, 43, PENCERE_GENISLIK, 2))
+                pygame.draw.rect(screen, DARK_GRAY, (0, 0, WINDOW_WIDTH, 45))
+                pygame.draw.rect(screen, LIGHT_GRAY, (0, 43, WINDOW_WIDTH, 2))
                 
-                oyuncu_text = kucuk_font.render(f"{oyuncu_adi}: {skor} çöp", True, ACIK_GRI)
-                ekran.blit(oyuncu_text, (10, 10))
+                # Left side - Player info
+                player_text = small_font.render(f"{game_state.player_name}: {score} {GAME_NAMES['trash_collected']}", True, LIGHT_GRAY)
+                screen.blit(player_text, (15, 15))
                 
-                esc_bilgi = kucuk_font.render("ESC: Ana Menü", True, ACIK_GRI)
-                ekran.blit(esc_bilgi, (PENCERE_GENISLIK - 130, 15))
+                # Right side - ESC info
+                esc_info = small_font.render(GAME_NAMES['press_esc_main_menu'], True, LIGHT_GRAY)
+                esc_width = esc_info.get_width()
+                screen.blit(esc_info, (WINDOW_WIDTH - esc_width - 15, 15))
                 
                 pygame.display.flip()
-                saat.tick(60)
+                clock.tick(60)
         
-            if ana_menuye_don:
+            if return_to_main:
                 break
                 
-            if oyun_bitti:
-                sonuc = oyun_bitti_ekrani(skor, zorluk_ismi)
-                if sonuc == 'tekrar':
+            if game_over:
+                result = game_over_screen(score, difficulty_name)
+                if result == 'replay':
                     continue
-                elif sonuc == 'menu':
+                elif result == 'menu':
                     break
             
             break

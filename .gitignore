@@ -115,5 +115,5 @@ dmypy.json
 *.log
 
 # Game settings (personal preferences)
-ayarlar.json
+settings.json
 highscores.json
