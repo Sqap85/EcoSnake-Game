@@ -206,7 +206,7 @@ class Cop:
         ekran.blit(self.sprite, (self.x, self.y))
 
 # Skor tablosu fonksiyonları
-def skor_kaydet(isim, skor, karakter, zorluk):
+def skor_kaydet(isim, skor, zorluk):
     try:
         with open('highscores.json', 'r') as f:
             skorlar = json.load(f)
@@ -715,7 +715,7 @@ def zorluk_sec():
                     return None, None  # Ana menüye dön
 
 def oyun_bitti_ekrani(skor, zorluk_ismi):
-    skor_kaydet(oyuncu_adi, skor, secili_karakter, zorluk_ismi)
+    skor_kaydet(oyuncu_adi, skor, zorluk_ismi)
     
     while True:
         ekran.fill(SIYAH)
