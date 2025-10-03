@@ -131,6 +131,12 @@ NAME_INPUT_HEIGHT = 60
 MAX_NAME_LENGTH = 12
 MIN_NAME_LENGTH = 2
 
+# Game Logic Constants
+TARGET_FPS = 60
+COLLISION_TOLERANCE = SQUARE_SIZE // 2
+CURSOR_BLINK_INTERVAL = 1000
+UI_PADDING = 15
+
 SPEEDS = {
     GAME_NAMES['difficulty1']: 5,
     GAME_NAMES['difficulty2']: 10,
@@ -152,8 +158,22 @@ clock = pygame.time.Clock()
 
 # Sprite loading function
 def load_sprite(filename, size=(SQUARE_SIZE, SQUARE_SIZE)):
-    sprite = pygame.image.load(f"assets/{filename}")
-    return pygame.transform.scale(sprite, size)
+    """Load and scale a sprite with error handling"""
+    try:
+        sprite = pygame.image.load(f"assets/{filename}")
+        return pygame.transform.scale(sprite, size)
+    except pygame.error as e:
+        print(f"Warning: Could not load sprite '{filename}': {e}")
+        # Create a placeholder colored rectangle
+        placeholder = pygame.Surface(size)
+        placeholder.fill((100, 100, 100))  # Gray placeholder
+        return placeholder
+    except FileNotFoundError:
+        print(f"Warning: Sprite file 'assets/{filename}' not found")
+        # Create a placeholder colored rectangle
+        placeholder = pygame.Surface(size)
+        placeholder.fill((100, 100, 100))  # Gray placeholder
+        return placeholder
 
 # Characters
 CHARACTERS = {
@@ -216,6 +236,7 @@ class GameState:
         self.selected_garbage = GAME_NAMES['garbage_bag1']
     
     def save_settings(self):
+        """Save current settings to JSON file with error handling"""
         settings = {
             'selected_character': self.selected_character,
             'selected_background': self.selected_background,
@@ -224,24 +245,229 @@ class GameState:
         try:
             with open('settings.json', 'w', encoding='utf-8') as f:
                 json.dump(settings, f, indent=2, ensure_ascii=False)
+        except (IOError, OSError) as e:
+            print(f"Warning: Settings could not be saved: {e}")
         except Exception as e:
-            print(f"Settings could not be saved: {e}")
+            print(f"Unexpected error saving settings: {e}")
     
     def load_settings(self):
+        """Load settings from JSON file with comprehensive error handling"""
         try:
             with open('settings.json', 'r', encoding='utf-8') as f:
                 settings = json.load(f)
                 self.selected_character = settings.get('selected_character', GAME_NAMES['character1'])
                 self.selected_background = settings.get('selected_background', GAME_NAMES['background1'])
                 self.selected_garbage = settings.get('selected_garbage', GAME_NAMES['garbage_bag1'])
-        except (FileNotFoundError, json.JSONDecodeError, KeyError):
-            # Use default values if file doesn't exist or is corrupted
-            self.selected_character = GAME_NAMES['character1']
-            self.selected_background = GAME_NAMES['background1']
-            self.selected_garbage = GAME_NAMES['garbage_bag1']
+        except FileNotFoundError:
+            print("Info: Settings file not found, using defaults")
+            self._set_default_settings()
+        except json.JSONDecodeError as e:
+            print(f"Warning: Settings file corrupted ({e}), using defaults")
+            self._set_default_settings()
+        except (IOError, OSError) as e:
+            print(f"Warning: Could not read settings file ({e}), using defaults")
+            self._set_default_settings()
+        except Exception as e:
+            print(f"Unexpected error loading settings ({e}), using defaults")
+            self._set_default_settings()
+    
+    def _set_default_settings(self):
+        """Set default settings values"""
+        self.selected_character = GAME_NAMES['character1']
+        self.selected_background = GAME_NAMES['background1']
+        self.selected_garbage = GAME_NAMES['garbage_bag1']
 
 # Global game state instance
 game_state = GameState()
+
+# =============================================================================
+# GAME MANAGEMENT CLASSES
+# =============================================================================
+
+class GameSession:
+    """Manages a single game session from start to finish"""
+    
+    def __init__(self, player_name, difficulty_name, game_speed):
+        self.player_name = player_name
+        self.difficulty_name = difficulty_name
+        self.game_speed = game_speed
+        self.score = 0
+        self.collector = None
+        self.trash = None
+        self.last_dir = (1, 0)
+        self.frame_counter = 0
+        
+    def initialize_game_objects(self):
+        """Initialize game objects for a new session"""
+        self.collector = TrashCollector(CHARACTERS[game_state.selected_character])
+        self.trash = Trash()
+        self.score = 0
+        self.last_dir = (1, 0)
+        self.frame_counter = 0
+    
+    def handle_input(self, events):
+        """Handle player input during gameplay"""
+        for event in events:
+            if event.type == pygame.QUIT:
+                safe_exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return 'escape'
+                
+                new_dir = None
+                if event.key == pygame.K_UP and self.last_dir != (0, 1):
+                    new_dir = (0, -1)
+                elif event.key == pygame.K_DOWN and self.last_dir != (0, -1):
+                    new_dir = (0, 1)
+                elif event.key == pygame.K_LEFT and self.last_dir != (1, 0):
+                    new_dir = (-1, 0)
+                elif event.key == pygame.K_RIGHT and self.last_dir != (-1, 0):
+                    new_dir = (1, 0)
+                
+                if new_dir:
+                    self.collector.dir_x, self.collector.dir_y = new_dir
+                    self.last_dir = new_dir
+        return None
+    
+    def update_game_state(self):
+        """Update game state and check for collisions"""
+        self.frame_counter += 1
+        
+        move_time = False
+        if self.frame_counter >= (TARGET_FPS // self.game_speed):
+            self.frame_counter = 0
+            move_time = True
+            old_tail = self.collector.squares[-1]
+            self.collector.move()
+            
+            # Check collision right after movement
+            if self.collector.check_collision():
+                return 'collision'
+        
+        # Check trash collection
+        head_x, head_y = self.collector.squares[0]
+        collision = (abs(head_x - self.trash.x) <= COLLISION_TOLERANCE) and (abs(head_y - self.trash.y) <= COLLISION_TOLERANCE)
+        
+        if collision:
+            if move_time:
+                self.collector.squares.append(old_tail)
+            else:
+                self.collector.squares.append(self.collector.squares[-1])
+            
+            self.score += 1
+            self.trash = Trash()
+        
+        return None
+    
+    def render(self):
+        """Render the game screen"""
+        # Draw background
+        if game_state.selected_background in BACKGROUNDS:
+            screen.blit(BACKGROUNDS[game_state.selected_background], (0, 0))
+        else:
+            screen.fill(BLACK)
+            
+        self.collector.draw(screen)
+        self.trash.draw(screen)
+        
+        # Draw UI
+        pygame.draw.rect(screen, DARK_GRAY, (0, 0, WINDOW_WIDTH, 45))
+        pygame.draw.rect(screen, LIGHT_GRAY, (0, 43, WINDOW_WIDTH, 2))
+        
+        # Left side - Player info
+        player_text = small_font.render(f"{self.player_name}: {self.score} {GAME_NAMES['trash_collected']}", True, LIGHT_GRAY)
+        screen.blit(player_text, (UI_PADDING, UI_PADDING))
+        
+        # Right side - ESC info
+        esc_info = small_font.render(GAME_NAMES['main_menu_instruction'], True, LIGHT_GRAY)
+        esc_width = esc_info.get_width()
+        screen.blit(esc_info, (WINDOW_WIDTH - esc_width - UI_PADDING, UI_PADDING))
+        
+        pygame.display.flip()
+    
+    def play(self):
+        """Main game loop for this session"""
+        self.initialize_game_objects()
+        game_over = False
+        return_to_main = False
+        
+        while not game_over and not return_to_main:
+            events = pygame.event.get()
+            
+            input_result = self.handle_input(events)
+            if input_result == 'escape':
+                return_to_main = True
+                break
+            
+            update_result = self.update_game_state()
+            if update_result == 'collision':
+                game_over = True
+                break
+            
+            self.render()
+            clock.tick(TARGET_FPS)
+        
+        if return_to_main:
+            return 'menu'
+        elif game_over:
+            return game_over_screen(self.score, self.difficulty_name)
+
+
+class GameManager:
+    """Manages the overall game flow and state"""
+    
+    def __init__(self):
+        self.running = True
+    
+    def setup_new_session(self):
+        """Setup a new game session with player name and difficulty"""
+        # Player name input
+        if not enter_name():
+            return None, None, None
+        
+        # Difficulty selection
+        game_speed, difficulty_name = select_difficulty()
+        
+        if game_speed is None or difficulty_name is None:
+            game_state.player_name = ""
+            return None, None, None
+        
+        return game_state.player_name, difficulty_name, game_speed
+    
+    def run_game_session(self, player_name, difficulty_name, game_speed):
+        """Run a complete game session"""
+        while True:
+            session = GameSession(player_name, difficulty_name, game_speed)
+            result = session.play()
+            
+            if result == 'menu':
+                break
+            elif result == 'replay':
+                continue
+            else:
+                break
+    
+    def run(self):
+        """Main application loop"""
+        game_state.load_settings()
+        
+        while self.running:
+            menu_choice = main_menu()
+            
+            if menu_choice == 'settings':
+                settings_menu()
+                continue
+            elif menu_choice != 'game':
+                continue
+            
+            # Setup new game session
+            player_name, difficulty_name, game_speed = self.setup_new_session()
+            
+            if player_name is None:
+                continue
+            
+            # Run the game session
+            self.run_game_session(player_name, difficulty_name, game_speed)
 
 # Utility Functions
 def safe_exit():
@@ -315,10 +541,18 @@ class Trash:
 
 # Score table functions
 def save_score(name, score, difficulty):
+    """Save player score with comprehensive error handling"""
     try:
         with open('highscores.json', 'r') as f:
             scores = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        print("Info: High scores file not found, creating new one")
+        scores = []
+    except json.JSONDecodeError as e:
+        print(f"Warning: High scores file corrupted ({e}), starting fresh")
+        scores = []
+    except (IOError, OSError) as e:
+        print(f"Warning: Could not read high scores ({e}), starting fresh")
         scores = []
     
     # Check if player with same name exists
@@ -345,14 +579,26 @@ def save_score(name, score, difficulty):
     scores.sort(key=lambda x: x['score'], reverse=True)
     scores = scores[:10]
     
-    with open('highscores.json', 'w') as f:
-        json.dump(scores, f, indent=2)
+    try:
+        with open('highscores.json', 'w') as f:
+            json.dump(scores, f, indent=2)
+    except (IOError, OSError) as e:
+        print(f"Warning: Could not save high scores: {e}")
+    except Exception as e:
+        print(f"Unexpected error saving high scores: {e}")
 
 def show_high_scores():
+    """Display high scores with error handling"""
     try:
         with open('highscores.json', 'r') as f:
             scores = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        scores = []
+    except json.JSONDecodeError as e:
+        print(f"Warning: High scores file corrupted ({e})")
+        scores = []
+    except (IOError, OSError) as e:
+        print(f"Warning: Could not read high scores ({e})")
         scores = []
     
     while True:
@@ -421,11 +667,11 @@ def enter_name():
         screen.blit(text, text_rect)
         
         # Cursor
-        if pygame.time.get_ticks() % 1000 < 500:
+        if pygame.time.get_ticks() % CURSOR_BLINK_INTERVAL < (CURSOR_BLINK_INTERVAL // 2):
             if input_text:
                 cursor_x = text_rect.right + 3
             else:
-                cursor_x = box_rect.left + 15
+                cursor_x = box_rect.left + UI_PADDING
             pygame.draw.line(screen, YELLOW, (cursor_x, box_rect.top + 15), (cursor_x, box_rect.bottom - 15), 2)
         
         # Rules
@@ -918,135 +1164,9 @@ def game_over_screen(score, difficulty_name):
                     return 'menu'
 
 def main():
-    global FPS
-    
-    # Load settings at game start
-    game_state.load_settings()
-    
-    while True:
-        menu_choice = main_menu()
-        
-        if menu_choice == 'settings':
-            settings_menu()
-            continue
-        elif menu_choice != 'game':
-            continue
-        
-        # Player name and difficulty selection
-        game_speed = None
-        difficulty_name = None
-        
-        while True:
-            if not enter_name():
-                break
-            
-            game_speed, difficulty_name = select_difficulty()
-            
-            if game_speed is None or difficulty_name is None:
-                game_state.player_name = ""
-                continue
-            else:
-                break
-        
-        if game_speed is None or difficulty_name is None:
-            continue
-        
-        # Game loop
-        while True:
-            collector = TrashCollector(CHARACTERS[game_state.selected_character])
-            trash = Trash()
-            score = 0
-            last_dir = (1, 0)
-            grow = False
-            game_over = False
-            return_to_main = False
-            frame_counter = 0
-            
-            while not game_over and not return_to_main:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            return_to_main = True
-                            break
-                        
-                        new_dir = None
-                        if event.key == pygame.K_UP and last_dir != (0, 1):
-                            new_dir = (0, -1)
-                        elif event.key == pygame.K_DOWN and last_dir != (0, -1):
-                            new_dir = (0, 1)
-                        elif event.key == pygame.K_LEFT and last_dir != (1, 0):
-                            new_dir = (-1, 0)
-                        elif event.key == pygame.K_RIGHT and last_dir != (-1, 0):
-                            new_dir = (1, 0)
-                        if new_dir:
-                            collector.dir_x, collector.dir_y = new_dir
-                            last_dir = new_dir
-
-                frame_counter += 1
-                
-                move_time = False
-                if frame_counter >= (60 // game_speed):
-                    frame_counter = 0
-                    move_time = True
-                    old_tail = collector.squares[-1]
-                    collector.move()
-                    
-                    # Check collision right after movement
-                    if collector.check_collision():
-                        game_over = True
-                        break
-                
-                head_x, head_y = collector.squares[0]
-                
-                collision = (abs(head_x - trash.x) <= SQUARE_SIZE//2) and (abs(head_y - trash.y) <= SQUARE_SIZE//2)
-                
-                if collision:
-                    if move_time:
-                        collector.squares.append(old_tail)
-                    else:
-                        collector.squares.append(collector.squares[-1])
-                    
-                    score += 1
-                    trash = Trash()
-
-                # Draw background
-                if game_state.selected_background in BACKGROUNDS:
-                    screen.blit(BACKGROUNDS[game_state.selected_background], (0, 0))
-                else:
-                    screen.fill(BLACK)
-                    
-                collector.draw(screen)
-                trash.draw(screen)
-                
-                pygame.draw.rect(screen, DARK_GRAY, (0, 0, WINDOW_WIDTH, 45))
-                pygame.draw.rect(screen, LIGHT_GRAY, (0, 43, WINDOW_WIDTH, 2))
-                
-                # Left side - Player info
-                player_text = small_font.render(f"{game_state.player_name}: {score} {GAME_NAMES['trash_collected']}", True, LIGHT_GRAY)
-                screen.blit(player_text, (15, 15))
-                
-                # Right side - ESC info
-                esc_info = small_font.render(GAME_NAMES['main_menu_instruction'], True, LIGHT_GRAY)
-                esc_width = esc_info.get_width()
-                screen.blit(esc_info, (WINDOW_WIDTH - esc_width - 15, 15))
-                
-                pygame.display.flip()
-                clock.tick(60)
-        
-            if return_to_main:
-                break
-                
-            if game_over:
-                result = game_over_screen(score, difficulty_name)
-                if result == 'replay':
-                    continue
-                elif result == 'menu':
-                    break
-            
-            break
+    """Main entry point - creates and runs the game manager"""
+    game_manager = GameManager()
+    game_manager.run()
 
 if __name__ == "__main__":
     main()
