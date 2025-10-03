@@ -71,13 +71,13 @@ GAME_NAMES = {
     'active': 'ACTIVE',
     'select_difficulty': 'Select Difficulty:',
     'no_scores_yet': 'No scores recorded yet!',
-    'press_esc_back': "Press ESC to go back",
-    'press_enter_ok': 'ENTER - OK',
-    'press_esc_return': 'ESC - Go Back',
+    'back_instruction': "Press ESC to go back",
+    'confirm_button': 'ENTER - OK',
+    'return_instruction': 'ESC - Go Back',
     'character_info': 'Character',
     'background_info': 'Background',
     'garbage_bag_info': 'Garbage Bag',
-    'press_esc_main_menu': 'ESC: Main Menu',
+    'main_menu_instruction': 'ESC: Main Menu',
     'environmental_message': "Don't throw trash on the ground for a cleaner world!",
     'play_again_enter': 'Press ENTER to play again',
     'show_scores_s': 'Press S to show scores',
@@ -90,9 +90,9 @@ GAME_NAMES = {
     'difficulty_header': 'Difficulty',
     
     # Instructions
-    'arrow_keys_select': 'Use arrow keys to select, ENTER to confirm, ESC to exit',
-    '2_12_characters': '2-12 characters',
-    'press_esc_exit': 'Press ESC to exit',
+    'navigation_help': 'Use arrow keys to select, ENTER to confirm, ESC to exit',
+    'name_length_rule': '2-12 characters',
+    'exit_instruction': 'Press ESC to exit',
     'trash_collected': 'trash collected'
 }
 
@@ -384,7 +384,7 @@ def show_high_scores():
                 y_pos += 25
         
         # Back info
-        back_info = font.render(GAME_NAMES['press_esc_back'], True, GRAY)
+        back_info = font.render(GAME_NAMES['back_instruction'], True, GRAY)
         back_rect = back_info.get_rect(center=(WINDOW_WIDTH//2, 520))
         screen.blit(back_info, back_rect)
         
@@ -429,18 +429,18 @@ def enter_name():
             pygame.draw.line(screen, YELLOW, (cursor_x, box_rect.top + 15), (cursor_x, box_rect.bottom - 15), 2)
         
         # Rules
-        rule = small_font.render(GAME_NAMES['2_12_characters'], True, GRAY)
+        rule = small_font.render(GAME_NAMES['name_length_rule'], True, GRAY)
         rule_rect = rule.get_rect(center=(WINDOW_WIDTH//2, 300))
         screen.blit(rule, rule_rect)
         
         # Instructions
         enter_active = len(input_text.strip()) >= 2
         enter_color = GREEN if enter_active else GRAY
-        enter_text = font.render(GAME_NAMES['press_enter_ok'], True, enter_color)
+        enter_text = font.render(GAME_NAMES['confirm_button'], True, enter_color)
         enter_rect = enter_text.get_rect(center=(WINDOW_WIDTH//2, 380))
         screen.blit(enter_text, enter_rect)
         
-        esc_text = small_font.render(GAME_NAMES['press_esc_return'], True, GRAY)
+        esc_text = small_font.render(GAME_NAMES['return_instruction'], True, GRAY)
         esc_rect = esc_text.get_rect(center=(WINDOW_WIDTH//2, 420))
         screen.blit(esc_text, esc_rect)
         
@@ -563,7 +563,7 @@ def main_menu():
             screen.blit(text, text_rect)
         
         # Instructions
-        instructions = small_font.render(GAME_NAMES['arrow_keys_select'], True, GRAY)
+        instructions = small_font.render(GAME_NAMES['navigation_help'], True, GRAY)
         instructions_rect = instructions.get_rect(center=(WINDOW_WIDTH//2, 520))
         screen.blit(instructions, instructions_rect)
         
@@ -621,7 +621,7 @@ def settings_menu():
             screen.blit(text, text_rect)
         
         # Back info
-        back_info = font.render(GAME_NAMES['press_esc_back'], True, GRAY)
+        back_info = font.render(GAME_NAMES['back_instruction'], True, GRAY)
         back_rect = back_info.get_rect(center=(WINDOW_WIDTH//2, 420))
         screen.blit(back_info, back_rect)
         
@@ -799,7 +799,7 @@ def select_difficulty():
             screen.blit(option, option_rect)
         
         # ESC exit info
-        exit_info = font.render(GAME_NAMES['press_esc_exit'], True, GRAY)
+        exit_info = font.render(GAME_NAMES['exit_instruction'], True, GRAY)
         exit_rect = exit_info.get_rect(center=(WINDOW_WIDTH//2, 450))
         screen.blit(exit_info, exit_rect)
         
@@ -1029,7 +1029,7 @@ def main():
                 screen.blit(player_text, (15, 15))
                 
                 # Right side - ESC info
-                esc_info = small_font.render(GAME_NAMES['press_esc_main_menu'], True, LIGHT_GRAY)
+                esc_info = small_font.render(GAME_NAMES['main_menu_instruction'], True, LIGHT_GRAY)
                 esc_width = esc_info.get_width()
                 screen.blit(esc_info, (WINDOW_WIDTH - esc_width - 15, 15))
                 
