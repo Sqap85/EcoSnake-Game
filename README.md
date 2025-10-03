@@ -123,12 +123,9 @@ For questions or suggestions:
 
 ### 🎮 Oyun Hakkında
 
-Eğlenceli ve eğitici bir çevre koruma oyunu! Çöpleri toplayarak doğayı temiz tut ve çevre bilincini geliştir.
+EcoSnake eğlenceli ve eğitici bir çevre koruma oyunu! Çöpleri toplayarak doğayı temiz tut ve çevre bilincini geliştir.
 
-
-## 🎮 Oyun Hakkında
-
-Bu oyun, çevre bilincini geliştirmek amacıyla tasarlanmış eğitici bir Python oyunudur. Oyuncu, farklı türdeki çöpleri toplayarak çevreyi temiz tutar. EcoSnake, klasik Yılan oyunu mekaniğini çevre koruma temasıyla birleştirir
+Bu oyun, çevre bilincini geliştirmek amacıyla tasarlanmış eğitici bir Python oyunudur. Oyuncu, farklı türdeki çöpleri toplayarak çevreyi temiz tutar. EcoSnake, klasik Yılan oyunu mekaniğini çevre koruma temasıyla birleştirir.
 
 ## 🚀 Kurulum ve Çalıştırma
 
