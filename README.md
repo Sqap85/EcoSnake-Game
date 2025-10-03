@@ -105,9 +105,17 @@ If you want to contribute to the project:
 
 ### 📝 License
 
-This project is published under the MIT license. See the LICENSE file for details.
+This project is published under the MIT license. See the [LICENSE](LICENSE) file for details.
 
-**Remember**: In real life, dispose of your trash properly too! 🌍💚
+### 📞 Contact
+
+For questions or suggestions:
+- GitHub Issues section  
+- Send a Pull Request
+
+**Remember**: In real life, put your trash in the trash bag too! 🌍💚
+
+**Wishing you fun games and a clean environment!** 🎮🌿
 
 ---
 
@@ -221,17 +229,9 @@ Projeye katkıda bulunmak isterseniz:
 
 ## 📝 Lisans
 
-Bu proje MIT lisansı altında yayınlanmıştır. Detaylar için LICENSE dosyasına bakınız.
+Bu proje MIT lisansı altında yayınlanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakınız.
 
 
-
-**Unutma**: Gerçek hayatta da çöplerini doğru yerlere at! 🌍💚
-
-## 📞 İletişim
-
-Sorularınız veya önerileriniz için:
-- GitHub Issues bölümü
-- Pull Request gönderin
 
 ### 📞 İletişim
 
@@ -239,14 +239,6 @@ Sorularınız veya önerileriniz için:
 - GitHub Issues bölümü
 - Pull Request gönderin
 
+**Unutma**: Gerçek hayatta da çöplerini çöpe at! 🌍💚
+
 **Eğlenceli oyunlar ve temiz bir çevre dileğiyle!** 🎮🌿
-
----
-
-## Contact
-
-For questions or suggestions:
-- GitHub Issues section  
-- Send a Pull Request
-
-**Wishing you fun games and a clean environment!** 🎮🌿
