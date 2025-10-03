@@ -1,7 +1,7 @@
 [
   {
-    "isim": "85",
-    "skor": 99999999,
-    "zorluk": "GOD LEVEL"
+    "name": "85",
+    "score": 99999999,
+    "difficulty": "GOD LEVEL"
   }
 ]
