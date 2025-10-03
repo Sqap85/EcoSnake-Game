@@ -45,6 +45,12 @@ GAME_NAMES = {
     'garbage_bag2': 'Yellow Bag',
     'garbage_bag3': 'Black Bag',
     
+    # Collected trash items
+    'trash1': 'Apple',
+    'trash2': 'Banana', 
+    'trash3': 'Bottle',
+    'trash4': 'Landfill',
+    
     # Difficulty levels
     'difficulty1': 'Easy',
     'difficulty2': 'Medium',
@@ -158,10 +164,10 @@ CHARACTERS = {
 
 # Trash types
 TRASH_SPRITES = {
-    'apple': load_sprite("apple.png"),
-    'banana': load_sprite("banana.png"),
-    'bottle': load_sprite("bottle.png"),
-    'landfill': load_sprite("landfill.png")
+    GAME_NAMES['trash1']: load_sprite("apple.png"),
+    GAME_NAMES['trash2']: load_sprite("banana.png"),
+    GAME_NAMES['trash3']: load_sprite("bottle.png"),
+    GAME_NAMES['trash4']: load_sprite("landfill.png")
 }
 
 # Garbage bags
