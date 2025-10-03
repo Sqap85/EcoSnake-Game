@@ -1,5 +1,120 @@
 # 🐍 EcoSnake Game
 
+*[English](#english) | [Türkçe](#türkçe)*
+
+## English
+
+### 🎮 About the Game
+
+EcoSnake is a fun and educational environmental protection game! Collect trash to keep nature clean and develop environmental awareness.
+
+This game is an educational Python game designed to develop environmental awareness. The player keeps the environment clean by collecting different types of trash. EcoSnake combines classic Snake game mechanics with an environmental protection theme.
+
+### 🚀 Installation and Running
+
+#### Requirements
+- Python 3.6 or higher
+- Pygame library
+
+#### Step 1: Python Installation
+
+**Windows:**
+1. Download Python from [Python.org](https://python.org)
+2. Run the downloaded file
+3. Check **"Add Python to PATH"** option
+4. Click "Install Now" button
+
+**macOS:**
+```bash
+# Installation with Homebrew (recommended)
+brew install python
+
+# Or download directly from Python.org
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install python3 python3-pip
+```
+
+#### Step 2: Download the Project
+
+**Download with Git (recommended):**
+```bash
+git clone https://github.com/Sqap85/EcoSnake-Game.git
+cd EcoSnake-Game
+```
+
+**Or download as ZIP:**
+1. Click the green **"Code"** button on GitHub page
+2. Select **"Download ZIP"** option
+3. Extract the downloaded file to a folder
+4. Navigate to that folder via Terminal/Command Prompt
+
+#### Step 3: Pygame Installation
+
+Run this command in Terminal or Command Prompt:
+
+```bash
+pip install pygame
+```
+
+**Note:** If `pip` command doesn't work, try:
+- Windows: `py -m pip install pygame`
+- macOS/Linux: `pip3 install pygame` or `python3 -m pip install pygame`
+
+#### Step 4: Start the Game
+
+```bash
+python EcoSnake.py
+```
+
+**Note:** If `python` command doesn't work:
+- Windows: `py EcoSnake.py`
+- macOS/Linux: `python3 EcoSnake.py`
+
+### 🎯 How to Play?
+
+#### Controls:
+- **↑ ↓ ← →** : Use arrow keys for movement
+- **ENTER** : To make selections
+- **ESC** : To return to main menu or exit game
+
+#### Game Rules:
+1. **Goal**: Increase your score by collecting trash
+2. **Movement**: Direct your character with arrow keys
+3. **Trash Collection**: Touch trash items to collect them
+4. **Caution**: Don't hit your own trash bag trail!
+5. **Growth**: Your trail gets longer each time you collect trash
+
+#### Difficulty Levels:
+- **Easy**: Slow movement, ideal for beginners
+- **Medium**: Normal speed, balanced game experience
+- **Hard**: Fast movement, for experienced players
+
+### 👥 Contributing
+
+If you want to contribute to the project:
+
+1. Fork the project
+2. Create a new branch (`git checkout -b new-feature`)
+3. Commit your changes (`git commit -am 'Added new feature'`)
+4. Push the branch (`git push origin new-feature`)
+5. Create a Pull Request
+
+### 📝 License
+
+This project is published under the MIT license. See the LICENSE file for details.
+
+**Remember**: In real life, dispose of your trash properly too! 🌍💚
+
+---
+
+## Türkçe
+
+### 🎮 Oyun Hakkında
+
 Eğlenceli ve eğitici bir çevre koruma oyunu! Çöpleri toplayarak doğayı temiz tut ve çevre bilincini geliştir.
 
 
@@ -118,4 +233,20 @@ Sorularınız veya önerileriniz için:
 - GitHub Issues bölümü
 - Pull Request gönderin
 
+### 📞 İletişim
+
+Sorularınız veya önerileriniz için:
+- GitHub Issues bölümü
+- Pull Request gönderin
+
 **Eğlenceli oyunlar ve temiz bir çevre dileğiyle!** 🎮🌿
+
+---
+
+## Contact
+
+For questions or suggestions:
+- GitHub Issues section  
+- Send a Pull Request
+
+**Wishing you fun games and a clean environment!** 🎮🌿
