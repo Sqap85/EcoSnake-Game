@@ -151,63 +151,104 @@ TRASH_COLLECTION_TOLERANCE = SQUARE_SIZE - 8  # More generous for trash collecti
 CURSOR_BLINK_INTERVAL = TARGET_FPS * 16  # 16 frames = ~267ms at 60fps
 
 # =============================================================================
-# UI CONSTANTS
+# USER INTERFACE CONSTANTS
 # =============================================================================
 
-# UI Layout Constants
+# ┌─────────────────────────────────────────────────────────────────────────────┐
+# │                            LAYOUT & POSITIONING                             │
+# └─────────────────────────────────────────────────────────────────────────────┘
+
+# Base UI Layout
 UI_AREA_HEIGHT = 45
 UI_BORDER_HEIGHT = 2
 UI_PADDING = 15
 EDGE_MARGIN = 15
 
-# Main Menu Constants
+# Menu Positioning
 MAIN_MENU_START_Y = 220
-MAIN_MENU_BOX_WIDTH = 250
-MAIN_MENU_BOX_HEIGHT = 50
-MAIN_MENU_BOX_Y_OFFSET = 25
-
-# Settings Menu Constants
-MENU_BOX_WIDTH = 500
-MENU_BOX_HEIGHT = 120
 MENU_START_Y = 160
-MENU_BOX_Y_OFFSET = 20
+DIFFICULTY_START_Y = 220
+
+# Menu Spacing
 MENU_ITEM_SPACING = 60
 MENU_ITEM_HEIGHT = 50
 MENU_VERTICAL_SPACING = 140
-
-# Input & Sprites Constants
-NAME_INPUT_WIDTH = 400
-NAME_INPUT_HEIGHT = 60
-LARGE_SPRITE_SIZE = 80
-
-# Text Constraints
-MAX_NAME_LENGTH = 12
-MIN_NAME_LENGTH = 2
-
-# Difficulty Menu Constants
-DIFFICULTY_BOX_WIDTH = 200
-DIFFICULTY_BOX_HEIGHT = 40
-DIFFICULTY_START_Y = 220
 DIFFICULTY_ITEM_SPACING = 50
-DIFFICULTY_BOX_Y_OFFSET = 20
 
-# Name Input Constants
+# Name Input Positioning
 NAME_INPUT_Y = 220
 NAME_INPUT_TITLE_Y = 150
 NAME_INPUT_RULE_Y = 300
 NAME_INPUT_CONFIRM_Y = 380
 NAME_INPUT_ESC_Y = 420
 
-# High Scores Constants
-HIGH_SCORES_TABLE_POSITIONS = [150, 200, 400, 500]
-
-# Game Over Constants
+# Game Over Screen Positioning
 GAME_OVER_OPTION_Y_START = 350
 GAME_OVER_OPTION_Y_SPACING = 30
 
-# Title Line Constants
+# Table and Line Positioning
+HIGH_SCORES_TABLE_POSITIONS = [150, 200, 400, 500]
 TITLE_LINE_Y = 110
 TITLE_LINE_MARGIN = 100
+SETTINGS_LINE_MARGIN = 100
+SETTINGS_SEPARATOR_LINE_Y = 112
+
+# ┌─────────────────────────────────────────────────────────────────────────────┐
+# │                           DIMENSIONS & SIZING                               │
+# └─────────────────────────────────────────────────────────────────────────────┘
+
+# Menu Box Dimensions
+MENU_BOX_WIDTH = 500
+MENU_BOX_HEIGHT = 120
+MAIN_MENU_BOX_WIDTH = 250
+MAIN_MENU_BOX_HEIGHT = 50
+DIFFICULTY_BOX_WIDTH = 200
+DIFFICULTY_BOX_HEIGHT = 40
+
+# Input Field Dimensions
+NAME_INPUT_WIDTH = 400
+NAME_INPUT_HEIGHT = 60
+
+# Sprite Dimensions
+LARGE_SPRITE_SIZE = 80
+
+# Text Constraints
+MAX_NAME_LENGTH = 12
+MIN_NAME_LENGTH = 2
+
+# ┌─────────────────────────────────────────────────────────────────────────────┐
+# │                          VISUAL STYLING                                     │
+# └─────────────────────────────────────────────────────────────────────────────┘
+
+# Border Widths
+MENU_BOX_BORDER_WIDTH = 2
+MENU_BOX_BORDER_WIDTH_SELECTED = 4
+NAME_INPUT_BORDER_WIDTH = 3
+LINE_BORDER_WIDTH = 3
+THIN_LINE_WIDTH = 1
+CURSOR_LINE_WIDTH = 2
+MAIN_MENU_BORDER_WIDTH = 3
+SETTINGS_MENU_BORDER_WIDTH = 3
+DIFFICULTY_MENU_BORDER_WIDTH = 3
+
+# Border Radius
+MENU_BOX_RADIUS = 15
+NAME_INPUT_RADIUS = 10
+BACKGROUND_PREVIEW_RADIUS = 5
+MAIN_MENU_RADIUS = 12
+SETTINGS_MENU_RADIUS = 10
+DIFFICULTY_MENU_RADIUS = 10
+
+# Box Offsets and Padding
+MENU_BOX_Y_OFFSET = 20
+MAIN_MENU_BOX_Y_OFFSET = 25
+DIFFICULTY_BOX_Y_OFFSET = 20
+MAIN_MENU_INNER_PADDING = 5
+MAIN_MENU_INNER_REDUCTION = 10
+
+# Spacing and Margins
+CURSOR_MARGIN = 15
+HIGH_SCORES_TABLE_EXTENSION = 80
 
 # =============================================================================
 # PYGAME INITIALIZATION
@@ -247,11 +288,11 @@ def load_sprite(filename, size=(SQUARE_SIZE, SQUARE_SIZE)):
 def draw_menu_box(screen, box_rect, selected=False):
     """Draw a menu box with selection highlighting"""
     if selected:
-        pygame.draw.rect(screen, DARK_GRAY, box_rect, 0, 15)
-        pygame.draw.rect(screen, CYAN, box_rect, 4, 15)
+        pygame.draw.rect(screen, DARK_GRAY, box_rect, 0, MENU_BOX_RADIUS)
+        pygame.draw.rect(screen, CYAN, box_rect, MENU_BOX_BORDER_WIDTH_SELECTED, MENU_BOX_RADIUS)
     else:
-        pygame.draw.rect(screen, MENU_BOX_COLOR, box_rect, 0, 15)
-        pygame.draw.rect(screen, LIGHT_GRAY, box_rect, 2, 15)
+        pygame.draw.rect(screen, MENU_BOX_COLOR, box_rect, 0, MENU_BOX_RADIUS)
+        pygame.draw.rect(screen, LIGHT_GRAY, box_rect, MENU_BOX_BORDER_WIDTH, MENU_BOX_RADIUS)
 
 def draw_score_line(screen, i, score_info, y_pos, positions):
     """Draw a single score line in the high scores table"""
@@ -262,6 +303,84 @@ def draw_score_line(screen, i, score_info, y_pos, positions):
     for text, x_pos in zip(texts, positions):
         text_surface = small_font.render(text, True, color)
         screen.blit(text_surface, (x_pos, y_pos))
+
+def generic_selection_menu(title_text, options, selected_option, get_sprite_func=None, get_active_func=None, on_select_func=None, preview_type=None):
+    """Generic selection menu for character/background/garbage bag selection"""
+    selected = options.index(selected_option) if selected_option in options else 0
+    
+    while True:
+        screen.fill(BLACK)
+        
+        # Title
+        title = large_font.render(title_text.upper(), True, CYAN)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
+        screen.blit(title, title_rect)
+        
+        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), LINE_BORDER_WIDTH)
+        
+        # Show options
+        for i, name in enumerate(options):
+            y = MENU_START_Y + i * MENU_VERTICAL_SPACING
+            is_selected = (i == selected)
+            
+            box_x = WINDOW_WIDTH//2 - MENU_BOX_WIDTH//2
+            box_rect = pygame.Rect(box_x, y-MENU_BOX_Y_OFFSET, MENU_BOX_WIDTH, MENU_BOX_HEIGHT)
+            
+            draw_menu_box(screen, box_rect, is_selected)
+            
+            # Show sprite/preview based on type
+            if get_sprite_func:
+                sprite = get_sprite_func(name)
+                if sprite:
+                    large_sprite = pygame.transform.scale(sprite, (LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE))
+                    sprite_rect = large_sprite.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
+                    screen.blit(large_sprite, sprite_rect)
+            elif preview_type == 'background':
+                # Special handling for background preview
+                if name == 'Black':
+                    preview_rect = pygame.Rect(0, 0, LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE)
+                    preview_rect.center = (box_x + LARGE_SPRITE_SIZE, y + 40)
+                    pygame.draw.rect(screen, BLACK, preview_rect, 0, BACKGROUND_PREVIEW_RADIUS)
+                elif name in BACKGROUNDS:
+                    try:
+                        preview = pygame.transform.scale(BACKGROUNDS[name], (LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE))
+                        sprite_rect = preview.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
+                        screen.blit(preview, sprite_rect)
+                    except (pygame.error, ValueError, TypeError):
+                        color = GREEN if name == 'Forest' else BLUE
+                        preview_rect = pygame.Rect(0, 0, LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE)
+                        preview_rect.center = (box_x + LARGE_SPRITE_SIZE, y + 40)
+                        pygame.draw.rect(screen, color, preview_rect, 0, BACKGROUND_PREVIEW_RADIUS)
+            
+            # Show name
+            color = CYAN if is_selected else WHITE
+            name_text = font.render(name, True, color)
+            name_rect = name_text.get_rect(center=(box_x + 280, y + 30))
+            screen.blit(name_text, name_rect)
+            
+            # Show active indicator
+            if get_active_func and get_active_func(name):
+                active_text = small_font.render(GAME_NAMES['active'], True, NEON_GREEN)
+                active_rect = active_text.get_rect(center=(box_x + 280, y + 60))
+                screen.blit(active_text, active_rect)
+        
+        pygame.display.flip()
+        
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                safe_exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return
+                elif event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(options)
+                elif event.key == pygame.K_RETURN:
+                    if on_select_func:
+                        on_select_func(options[selected])
+                    return
 
 def safe_exit():
     """Safely exit the game"""
@@ -364,6 +483,62 @@ class GameState:
 game_state = GameState()
 
 # =============================================================================
+# PERFORMANCE OPTIMIZATION - TEXT CACHING
+# =============================================================================
+
+class TextCache:
+    """Cache frequently used rendered text surfaces for better performance"""
+    
+    def __init__(self):
+        self.cache = {}
+        self.menu_texts = {}
+        self.static_texts = {}
+    
+    def get_text(self, text, font, color, cache_key=None):
+        """Get cached text surface or render and cache if not exists"""
+        key = cache_key or f"{text}_{font}_{color}"
+        
+        if key not in self.cache:
+            self.cache[key] = font.render(text, True, color)
+        
+        return self.cache[key]
+    
+    def preload_menu_texts(self):
+        """Preload commonly used menu texts for better performance"""
+        # Main menu texts
+        for text in [GAME_NAMES['start_game'], GAME_NAMES['high_scores'], 
+                    GAME_NAMES['settings'], GAME_NAMES['exit']]:
+            self.menu_texts[f"main_{text}_white"] = font.render(text, True, WHITE)
+            self.menu_texts[f"main_{text}_gray"] = font.render(text, True, LIGHT_GRAY)
+        
+        # Settings menu texts
+        for text in [GAME_NAMES['select_character'], GAME_NAMES['select_background'], 
+                    GAME_NAMES['select_garbage_bag']]:
+            self.menu_texts[f"settings_{text}_white"] = font.render(text, True, WHITE)
+            self.menu_texts[f"settings_{text}_gray"] = font.render(text, True, LIGHT_GRAY)
+        
+        # Static texts
+        self.static_texts['navigation_help'] = small_font.render(GAME_NAMES['navigation_help'], True, GRAY)
+        self.static_texts['back_instruction'] = font.render(GAME_NAMES['back_instruction'], True, GRAY)
+        self.static_texts['name_length_rule'] = small_font.render(GAME_NAMES['name_length_rule'], True, GRAY)
+        self.static_texts['return_instruction'] = small_font.render(GAME_NAMES['return_instruction'], True, GRAY)
+    
+    def get_menu_text(self, menu_type, text, selected=False):
+        """Get cached menu text with selection state"""
+        color_suffix = "white" if selected else "gray"
+        key = f"{menu_type}_{text}_{color_suffix}"
+        return self.menu_texts.get(key)
+    
+    def clear_cache(self):
+        """Clear all cached texts"""
+        self.cache.clear()
+        self.menu_texts.clear()
+        self.static_texts.clear()
+
+# Global text cache instance
+text_cache = TextCache()
+
+# =============================================================================
 # GAME MANAGEMENT CLASSES
 # =============================================================================
 
@@ -380,6 +555,13 @@ class GameSession:
         self.last_dir = (1, 0)
         self.frame_counter = 0
         
+        # Performance optimizations
+        self.cached_background = None
+        self.cached_ui_background = None
+        self.cached_esc_text = None
+        self.cached_player_text = None
+        self.last_score = -1  # Track score changes for text re-rendering
+        
     def initialize_game_objects(self):
         """Initialize game objects for a new session"""
         self.collector = TrashCollector(CHARACTERS[game_state.selected_character])
@@ -387,6 +569,32 @@ class GameSession:
         self.score = 0
         self.last_dir = (1, 0)
         self.frame_counter = 0
+        
+        # Initialize performance caches
+        self._cache_background()
+        self._cache_ui_elements()
+    
+    def _cache_background(self):
+        """Cache the background surface to avoid repeated blitting"""
+        self.cached_background = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
+        
+        if game_state.selected_background in BACKGROUNDS:
+            self.cached_background.blit(BACKGROUNDS[game_state.selected_background], (0, 0))
+        else:
+            self.cached_background.fill(BLACK)
+    
+    def _cache_ui_elements(self):
+        """Cache static UI elements that don't change frequently"""
+        # Cache UI background (top bar)
+        self.cached_ui_background = pygame.Surface((WINDOW_WIDTH, UI_AREA_HEIGHT))
+        self.cached_ui_background.fill(DARK_GRAY)
+        
+        # Draw the bottom border on cached surface
+        pygame.draw.rect(self.cached_ui_background, LIGHT_GRAY, 
+                        (0, UI_AREA_HEIGHT - UI_BORDER_HEIGHT, WINDOW_WIDTH, UI_BORDER_HEIGHT))
+        
+        # Cache ESC instruction text (never changes during gameplay)
+        self.cached_esc_text = small_font.render(GAME_NAMES['main_menu_instruction'], True, LIGHT_GRAY)
     
     def handle_input(self, events):
         """Handle player input during gameplay"""
@@ -445,28 +653,29 @@ class GameSession:
         return None
     
     def render(self):
-        """Render the game screen"""
-        # Draw background
-        if game_state.selected_background in BACKGROUNDS:
-            screen.blit(BACKGROUNDS[game_state.selected_background], (0, 0))
-        else:
-            screen.fill(BLACK)
+        """Render the game screen with performance optimizations"""
+        # Use cached background instead of repeated blitting/filling
+        screen.blit(self.cached_background, (0, 0))
             
         self.collector.draw(screen)
         self.trash.draw(screen)
         
-        # Draw UI
-        pygame.draw.rect(screen, DARK_GRAY, (0, 0, WINDOW_WIDTH, UI_AREA_HEIGHT))
-        pygame.draw.rect(screen, LIGHT_GRAY, (0, UI_AREA_HEIGHT - UI_BORDER_HEIGHT, WINDOW_WIDTH, UI_BORDER_HEIGHT))
+        # Use cached UI background
+        screen.blit(self.cached_ui_background, (0, 0))
         
-        # Left side - Player info
-        player_text = small_font.render(f"{self.player_name}: {self.score} {GAME_NAMES['trash_collected']}", True, LIGHT_GRAY)
-        screen.blit(player_text, (UI_PADDING, UI_PADDING))
+        # Left side - Player info (only re-render when score changes)
+        if self.score != self.last_score:
+            self.cached_player_text = small_font.render(
+                f"{self.player_name}: {self.score} {GAME_NAMES['trash_collected']}", 
+                True, LIGHT_GRAY
+            )
+            self.last_score = self.score
         
-        # Right side - ESC info
-        esc_info = small_font.render(GAME_NAMES['main_menu_instruction'], True, LIGHT_GRAY)
-        esc_width = esc_info.get_width()
-        screen.blit(esc_info, (WINDOW_WIDTH - esc_width - UI_PADDING, UI_PADDING))
+        screen.blit(self.cached_player_text, (UI_PADDING, UI_PADDING))
+        
+        # Right side - ESC info (use cached text)
+        esc_width = self.cached_esc_text.get_width()
+        screen.blit(self.cached_esc_text, (WINDOW_WIDTH - esc_width - UI_PADDING, UI_PADDING))
         
         pygame.display.flip()
     
@@ -703,15 +912,15 @@ def show_high_scores():
                 screen.blit(text, (x_pos, y_pos))
             
             y_pos += 25
-            pygame.draw.line(screen, WHITE, (positions[0], y_pos), (positions[-1] + 80, y_pos), 1)
+            pygame.draw.line(screen, WHITE, (positions[0], y_pos), (positions[-1] + HIGH_SCORES_TABLE_EXTENSION, y_pos), THIN_LINE_WIDTH)
             y_pos += 15
             
             for i, score_info in enumerate(scores[:10]):
                 draw_score_line(screen, i, score_info, y_pos, positions)
                 y_pos += 25
         
-        # Back info
-        back_info = font.render(GAME_NAMES['back_instruction'], True, GRAY)
+        # Back info - use cached text
+        back_info = text_cache.static_texts.get('back_instruction') or font.render(GAME_NAMES['back_instruction'], True, GRAY)
         back_rect = back_info.get_rect(center=(WINDOW_WIDTH//2, 520))
         screen.blit(back_info, back_rect)
         
@@ -739,8 +948,8 @@ def enter_name():
         
         # Input box 
         box_rect = pygame.Rect(WINDOW_WIDTH//2 - NAME_INPUT_WIDTH//2, NAME_INPUT_Y, NAME_INPUT_WIDTH, NAME_INPUT_HEIGHT)
-        pygame.draw.rect(screen, MENU_BOX_COLOR, box_rect, 0, 10)
-        pygame.draw.rect(screen, YELLOW if input_text else GRAY, box_rect, 3, 10)
+        pygame.draw.rect(screen, MENU_BOX_COLOR, box_rect, 0, NAME_INPUT_RADIUS)
+        pygame.draw.rect(screen, YELLOW if input_text else GRAY, box_rect, NAME_INPUT_BORDER_WIDTH, NAME_INPUT_RADIUS)
         
         # Show written text
         if input_text:
@@ -756,21 +965,22 @@ def enter_name():
                 cursor_x = text_rect.right + 3
             else:
                 cursor_x = box_rect.left + UI_PADDING
-            pygame.draw.line(screen, YELLOW, (cursor_x, box_rect.top + 15), (cursor_x, box_rect.bottom - 15), 2)
+            pygame.draw.line(screen, YELLOW, (cursor_x, box_rect.top + CURSOR_MARGIN), (cursor_x, box_rect.bottom - CURSOR_MARGIN), CURSOR_LINE_WIDTH)
         
-        # Rules
-        rule = small_font.render(GAME_NAMES['name_length_rule'], True, GRAY)
+        # Rules - use cached text
+        rule = text_cache.static_texts.get('name_length_rule') or small_font.render(GAME_NAMES['name_length_rule'], True, GRAY)
         rule_rect = rule.get_rect(center=(WINDOW_WIDTH//2, NAME_INPUT_RULE_Y))
         screen.blit(rule, rule_rect)
         
         # Instructions
         enter_active = len(input_text.strip()) >= 2
         enter_color = GREEN if enter_active else GRAY
-        enter_text = font.render(GAME_NAMES['confirm_button'], True, enter_color)
+        enter_text = text_cache.get_text(GAME_NAMES['confirm_button'], font, enter_color, f"confirm_button_{enter_color}")
         enter_rect = enter_text.get_rect(center=(WINDOW_WIDTH//2, NAME_INPUT_CONFIRM_Y))
         screen.blit(enter_text, enter_rect)
         
-        esc_text = small_font.render(GAME_NAMES['return_instruction'], True, GRAY)
+        # Use cached return instruction text
+        esc_text = text_cache.static_texts.get('return_instruction') or small_font.render(GAME_NAMES['return_instruction'], True, GRAY)
         esc_rect = esc_text.get_rect(center=(WINDOW_WIDTH//2, NAME_INPUT_ESC_Y))
         screen.blit(esc_text, esc_rect)
         
@@ -794,59 +1004,25 @@ def enter_name():
 
 def select_character():
     character_names = list(CHARACTERS.keys())
-    selected = character_names.index(game_state.selected_character) if game_state.selected_character in character_names else 0
     
-    while True:
-        screen.fill(BLACK)
-        
-        title = large_font.render(GAME_NAMES['select_character'].upper(), True, CYAN)
-        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
-        screen.blit(title, title_rect)
-        
-        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), 3)
-        
-        # Show characters
-        for i, name in enumerate(character_names):
-            y = MENU_START_Y + i * MENU_VERTICAL_SPACING
-            is_selected = (i == selected)
-            
-            box_x = WINDOW_WIDTH//2 - MENU_BOX_WIDTH//2
-            box_rect = pygame.Rect(box_x, y-MENU_BOX_Y_OFFSET, MENU_BOX_WIDTH, MENU_BOX_HEIGHT)
-            
-            draw_menu_box(screen, box_rect, is_selected)
-            
-            # Show character sprite
-            character_sprite = CHARACTERS[name]
-            large_sprite = pygame.transform.scale(character_sprite, (LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE))
-            sprite_rect = large_sprite.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
-            screen.blit(large_sprite, sprite_rect)
-            
-            color = CYAN if is_selected else WHITE
-            name_text = font.render(name, True, color)
-            name_rect = name_text.get_rect(center=(box_x + 280, y + 30))
-            screen.blit(name_text, name_rect)
-            
-            if name == game_state.selected_character:
-                active_text = small_font.render(GAME_NAMES['active'], True, NEON_GREEN)
-                active_rect = active_text.get_rect(center=(box_x + 280, y + 60))
-                screen.blit(active_text, active_rect)
-        
-        pygame.display.flip()
-        
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                safe_exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    return  # Return to settings menu
-                elif event.key == pygame.K_UP:
-                    selected = (selected - 1) % len(character_names)
-                elif event.key == pygame.K_DOWN:
-                    selected = (selected + 1) % len(character_names)
-                elif event.key == pygame.K_RETURN:
-                    game_state.selected_character = character_names[selected]
-                    game_state.save_settings()
-                    return
+    def get_sprite(name):
+        return CHARACTERS[name]
+    
+    def is_active(name):
+        return name == game_state.selected_character
+    
+    def on_select(name):
+        game_state.selected_character = name
+        game_state.save_settings()
+    
+    generic_selection_menu(
+        GAME_NAMES['select_character'],
+        character_names,
+        game_state.selected_character,
+        get_sprite_func=get_sprite,
+        get_active_func=is_active,
+        on_select_func=on_select
+    )
 
 def main_menu():
     options = [GAME_NAMES['start_game'], GAME_NAMES['high_scores'], GAME_NAMES['settings'], GAME_NAMES['exit']]
@@ -874,21 +1050,29 @@ def main_menu():
         
         # Menu options
         for i, option in enumerate(options):
-            color = WHITE if i == selected else LIGHT_GRAY
+            is_selected = (i == selected)
             y = MAIN_MENU_START_Y + i * MENU_ITEM_SPACING
             
-            if i == selected:
+            if is_selected:
                 box_x = WINDOW_WIDTH//2 - MAIN_MENU_BOX_WIDTH//2
-                pygame.draw.rect(screen, DARK_GRAY, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 0, 12)
-                pygame.draw.rect(screen, CYAN, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 3, 12)
-                pygame.draw.rect(screen, DARK_GRAY, (box_x+5, y-MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH-10, MAIN_MENU_BOX_HEIGHT-10), 0, 10)
+                pygame.draw.rect(screen, DARK_GRAY, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 0, MAIN_MENU_RADIUS)
+                pygame.draw.rect(screen, CYAN, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), MAIN_MENU_BORDER_WIDTH, MAIN_MENU_RADIUS)
+                pygame.draw.rect(screen, DARK_GRAY, (box_x+MAIN_MENU_INNER_PADDING, y-MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH-MAIN_MENU_INNER_REDUCTION, MAIN_MENU_BOX_HEIGHT-MAIN_MENU_INNER_REDUCTION), 0, SETTINGS_MENU_RADIUS)
             
-            text = font.render(option, True, color)
-            text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
-            screen.blit(text, text_rect)
+            # Use cached text instead of rendering every frame
+            cached_text = text_cache.get_menu_text("main", option, is_selected)
+            if cached_text:
+                text_rect = cached_text.get_rect(center=(WINDOW_WIDTH//2, y))
+                screen.blit(cached_text, text_rect)
+            else:
+                # Fallback to dynamic rendering if cache miss
+                color = WHITE if is_selected else LIGHT_GRAY
+                text = font.render(option, True, color)
+                text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
+                screen.blit(text, text_rect)
         
-        # Instructions
-        instructions = small_font.render(GAME_NAMES['navigation_help'], True, GRAY)
+        # Instructions - use cached text
+        instructions = text_cache.static_texts.get('navigation_help') or small_font.render(GAME_NAMES['navigation_help'], True, GRAY)
         instructions_rect = instructions.get_rect(center=(WINDOW_WIDTH//2, 520))
         screen.blit(instructions, instructions_rect)
         
@@ -925,25 +1109,33 @@ def settings_menu():
         title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
         screen.blit(title, title_rect)
         
-        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), 3)
-        pygame.draw.line(screen, DARK_GRAY, (100, 112), (WINDOW_WIDTH-100, 112), 1)
+        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), LINE_BORDER_WIDTH)
+        pygame.draw.line(screen, DARK_GRAY, (SETTINGS_LINE_MARGIN, SETTINGS_SEPARATOR_LINE_Y), (WINDOW_WIDTH-SETTINGS_LINE_MARGIN, SETTINGS_SEPARATOR_LINE_Y), THIN_LINE_WIDTH)
         
         # Menu options
         for i, option in enumerate(options):
-            color = WHITE if i == selected else LIGHT_GRAY
+            is_selected = (i == selected)
             y = MENU_START_Y + i * MENU_ITEM_SPACING
             
-            if i == selected:
+            if is_selected:
                 box_x = WINDOW_WIDTH//2 - MAIN_MENU_BOX_WIDTH//2
-                pygame.draw.rect(screen, DARK_GRAY, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 0, 10)
-                pygame.draw.rect(screen, CYAN, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 3, 10)
+                pygame.draw.rect(screen, DARK_GRAY, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 0, SETTINGS_MENU_RADIUS)
+                pygame.draw.rect(screen, CYAN, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), MAIN_MENU_BORDER_WIDTH, SETTINGS_MENU_RADIUS)
             
-            text = font.render(option, True, color)
-            text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
-            screen.blit(text, text_rect)
+            # Use cached text instead of rendering every frame
+            cached_text = text_cache.get_menu_text("settings", option, is_selected)
+            if cached_text:
+                text_rect = cached_text.get_rect(center=(WINDOW_WIDTH//2, y))
+                screen.blit(cached_text, text_rect)
+            else:
+                # Fallback to dynamic rendering if cache miss
+                color = WHITE if is_selected else LIGHT_GRAY
+                text = font.render(option, True, color)
+                text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
+                screen.blit(text, text_rect)
         
-        # Back info
-        back_info = font.render(GAME_NAMES['back_instruction'], True, GRAY)
+        # Back info - use cached text
+        back_info = text_cache.static_texts.get('back_instruction') or font.render(GAME_NAMES['back_instruction'], True, GRAY)
         back_rect = back_info.get_rect(center=(WINDOW_WIDTH//2, 420))
         screen.blit(back_info, back_rect)
         
@@ -969,123 +1161,45 @@ def settings_menu():
 
 def select_background():
     options = [bg['name'] for bg in BACKGROUNDS_CONFIG]
-    selected = options.index(game_state.selected_background) if game_state.selected_background in options else 0
     
-    while True:
-        screen.fill(BLACK)
-        
-        title = large_font.render(GAME_NAMES['select_background'].upper(), True, CYAN)
-        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
-        screen.blit(title, title_rect)
-        
-        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), 3)
-        
-        # Show backgrounds
-        for i, name in enumerate(options):
-            y = MENU_START_Y + i * MENU_VERTICAL_SPACING
-            is_selected = (i == selected)
-            
-            box_x = WINDOW_WIDTH//2 - MENU_BOX_WIDTH//2
-            box_rect = pygame.Rect(box_x, y-MENU_BOX_Y_OFFSET, MENU_BOX_WIDTH, MENU_BOX_HEIGHT)
-            
-            draw_menu_box(screen, box_rect, is_selected)
-            
-            # Background preview
-            if name == 'Black':
-                preview_rect = pygame.Rect(0, 0, LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE)
-                preview_rect.center = (box_x + LARGE_SPRITE_SIZE, y + 40)
-                pygame.draw.rect(screen, BLACK, preview_rect, 0, 5)
-            elif name in BACKGROUNDS:
-                try:
-                    preview = pygame.transform.scale(BACKGROUNDS[name], (LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE))
-                    sprite_rect = preview.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
-                    screen.blit(preview, sprite_rect)
-                except (pygame.error, ValueError, TypeError):
-                    color = GREEN if name == 'Forest' else BLUE
-                    preview_rect = pygame.Rect(0, 0, LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE)
-                    preview_rect.center = (box_x + LARGE_SPRITE_SIZE, y + 40)
-                    pygame.draw.rect(screen, color, preview_rect, 0, 5)
-            
-            color = CYAN if is_selected else WHITE
-            name_text = font.render(name, True, color)
-            name_rect = name_text.get_rect(center=(box_x + 280, y + 30))
-            screen.blit(name_text, name_rect)
-            
-            if name == game_state.selected_background:
-                active_text = small_font.render(GAME_NAMES['active'], True, NEON_GREEN)
-                active_rect = active_text.get_rect(center=(box_x + 280, y + 60))
-                screen.blit(active_text, active_rect)
-        
-        pygame.display.flip()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                safe_exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    selected = (selected - 1) % len(options)
-                elif event.key == pygame.K_DOWN:
-                    selected = (selected + 1) % len(options)
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
-                    game_state.selected_background = options[selected]
-                    game_state.save_settings()
-                    return
-                elif event.key == pygame.K_ESCAPE:
-                    return
+    def is_active(name):
+        return name == game_state.selected_background
+    
+    def on_select(name):
+        game_state.selected_background = name
+        game_state.save_settings()
+    
+    generic_selection_menu(
+        GAME_NAMES['select_background'],
+        options,
+        game_state.selected_background,
+        get_sprite_func=None,  # No sprite function for backgrounds
+        get_active_func=is_active,
+        on_select_func=on_select,
+        preview_type='background'  # Special preview type for backgrounds
+    )
 
 def select_garbage_bag():
     options = list(GARBAGE_BAGS.keys())
-    selected = options.index(game_state.selected_garbage) if game_state.selected_garbage in options else 0
     
-    while True:
-        screen.fill(BLACK)
-        
-        title = large_font.render(GAME_NAMES['select_garbage_bag'].upper(), True, CYAN)
-        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
-        screen.blit(title, title_rect)
-        
-        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), 3)
-        
-        # Show garbage bags
-        for i, name in enumerate(options):
-            y = MENU_START_Y + i * MENU_VERTICAL_SPACING
-            is_selected = (i == selected)
-            
-            box_x = WINDOW_WIDTH//2 - MENU_BOX_WIDTH//2
-            box_rect = pygame.Rect(box_x, y-MENU_BOX_Y_OFFSET, MENU_BOX_WIDTH, MENU_BOX_HEIGHT)
-            
-            draw_menu_box(screen, box_rect, is_selected)
-            
-            # Show garbage bag sprite
-            garbage_sprite = GARBAGE_BAGS[name]
-            large_sprite = pygame.transform.scale(garbage_sprite, (LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE))
-            sprite_rect = large_sprite.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
-            screen.blit(large_sprite, sprite_rect)
-            
-            color = CYAN if is_selected else WHITE
-            name_text = font.render(name, True, color)
-            name_rect = name_text.get_rect(center=(box_x + 280, y + 30))
-            screen.blit(name_text, name_rect)
-            
-            if name == game_state.selected_garbage:
-                active_text = small_font.render(GAME_NAMES['active'], True, NEON_GREEN)
-                active_rect = active_text.get_rect(center=(box_x + 280, y + 60))
-                screen.blit(active_text, active_rect)
-        
-        pygame.display.flip()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                safe_exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    selected = (selected - 1) % len(options)
-                elif event.key == pygame.K_DOWN:
-                    selected = (selected + 1) % len(options)
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
-                    game_state.selected_garbage = options[selected]
-                    game_state.save_settings()
-                    return
-                elif event.key == pygame.K_ESCAPE:
-                    return
+    def get_sprite(name):
+        return GARBAGE_BAGS[name]
+    
+    def is_active(name):
+        return name == game_state.selected_garbage
+    
+    def on_select(name):
+        game_state.selected_garbage = name
+        game_state.save_settings()
+    
+    generic_selection_menu(
+        GAME_NAMES['select_garbage_bag'],
+        options,
+        game_state.selected_garbage,
+        get_sprite_func=get_sprite,
+        get_active_func=is_active,
+        on_select_func=on_select
+    )
 
 def select_difficulty():
     options = list(SPEEDS.keys())
@@ -1103,8 +1217,8 @@ def select_difficulty():
             if i == selected:
                 # Draw box for selected difficulty
                 box_x = WINDOW_WIDTH//2 - DIFFICULTY_BOX_WIDTH//2
-                pygame.draw.rect(screen, DARK_GRAY, (box_x, y - DIFFICULTY_BOX_Y_OFFSET, DIFFICULTY_BOX_WIDTH, DIFFICULTY_BOX_HEIGHT), 0, 10)
-                pygame.draw.rect(screen, difficulty_color, (box_x, y - DIFFICULTY_BOX_Y_OFFSET, DIFFICULTY_BOX_WIDTH, DIFFICULTY_BOX_HEIGHT), 3, 10)
+                pygame.draw.rect(screen, DARK_GRAY, (box_x, y - DIFFICULTY_BOX_Y_OFFSET, DIFFICULTY_BOX_WIDTH, DIFFICULTY_BOX_HEIGHT), 0, DIFFICULTY_MENU_RADIUS)
+                pygame.draw.rect(screen, difficulty_color, (box_x, y - DIFFICULTY_BOX_Y_OFFSET, DIFFICULTY_BOX_WIDTH, DIFFICULTY_BOX_HEIGHT), DIFFICULTY_MENU_BORDER_WIDTH, DIFFICULTY_MENU_RADIUS)
                 color = difficulty_color
             else:
                 color = difficulty_color
@@ -1231,6 +1345,9 @@ def game_over_screen(score, difficulty_name):
 
 def main():
     """Main entry point - creates and runs the game manager"""
+    # Initialize text cache for better performance
+    text_cache.preload_menu_texts()
+    
     game_manager = GameManager()
     game_manager.run()
 
