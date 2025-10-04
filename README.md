@@ -127,24 +127,24 @@ EcoSnake eğlenceli ve eğitici bir çevre koruma oyunu! Çöpleri toplayarak do
 
 Bu oyun, çevre bilincini geliştirmek amacıyla tasarlanmış eğitici bir Python oyunudur. Oyuncu, farklı türdeki çöpleri toplayarak çevreyi temiz tutar. EcoSnake, klasik Yılan oyunu mekaniğini çevre koruma temasıyla birleştirir.
 
-## 🚀 Kurulum ve Çalıştırma
+### 🚀 Kurulum ve Çalıştırma
 
-### Gereksinimler
+#### Gereksinimler
 
 Oyunu çalıştırmak için aşağıdakiler gereklidir:
 
 - Python 3.6 veya üzeri
 - Pygame kütüphanesi
 
-### 1️⃣ Adım: Python Kurulumu
+#### 1️⃣ Adım: Python Kurulumu
 
-#### Windows:
+**Windows:**
 1. [Python.org](https://python.org) adresinden Python'ı indirin
 2. İndirilen dosyayı çalıştırın
 3. **"Add Python to PATH"** seçeneğini işaretleyin
 4. "Install Now" butonuna tıklayın
 
-#### macOS:
+**macOS:**
 ```bash
 # Homebrew ile kurulum (önerilen)
 brew install python
@@ -152,27 +152,27 @@ brew install python
 # Veya Python.org'dan direkt indirin
 ```
 
-#### Linux (Ubuntu/Debian):
+**Linux (Ubuntu/Debian):**
 ```bash
 sudo apt update
 sudo apt install python3 python3-pip
 ```
 
-### 2️⃣ Adım: Projeyi İndirin
+#### 2️⃣ Adım: Projeyi İndirin
 
-#### Git ile indirin (önerilen):
+**Git ile indirin (önerilen):**
 ```bash
 git clone https://github.com/Sqap85/EcoSnake-Game.git
 cd EcoSnake-Game
 ```
 
-#### Veya ZIP olarak indirin:
+**Veya ZIP olarak indirin:**
 1. GitHub sayfasında yeşil **"Code"** butonuna tıklayın
 2. **"Download ZIP"** seçeneğini seçin
 3. İndirilen dosyayı bir klasöre çıkarın
 4. Terminal/Komut İstemi ile o klasöre gidin
 
-### 3️⃣ Adım: Pygame Kurulumu
+#### 3️⃣ Adım: Pygame Kurulumu
 
 Terminal veya komut isteminde şu komutu çalıştırın:
 
@@ -184,7 +184,7 @@ pip install pygame
 - Windows: `py -m pip install pygame`
 - macOS/Linux: `pip3 install pygame` veya `python3 -m pip install pygame`
 
-### 4️⃣ Adım: Oyunu Başlatın
+#### 4️⃣ Adım: Oyunu Başlatın
 
 ```bash
 python EcoSnake.py
@@ -194,27 +194,27 @@ python EcoSnake.py
 - Windows: `py EcoSnake.py`
 - macOS/Linux: `python3 EcoSnake.py`
 
-## 🎯 Nasıl Oynanır?
+### 🎯 Nasıl Oynanır?
 
-### Kontroller:
+#### Kontroller:
 - **↑ ↓ ← →** : Hareket için ok tuşlarını kullanın
 - **ENTER** : Seçim yapmak için
 - **ESC** : Ana menüye dönmek veya oyundan çıkmak için
 
-### Oyun Kuralları:
+#### Oyun Kuralları:
 1. **Hedef**: Çöpleri toplayarak puanınızı artırın
 2. **Hareket**: Ok tuşlarıyla karakterinizi yönlendirin
 3. **Çöp Toplama**: Çöplere dokunarak onları toplayın
 4. **Dikkat**: Kendi çöp poşetinize çarpmayın!
 5. **Büyüme**: Her çöp topladığınızda arkadaki poşet uzar
 
-### Zorluk Seviyeleri:
+#### Zorluk Seviyeleri:
 - **Kolay**: Yavaş hareket, yeni başlayanlar için ideal
 - **Orta**: Normal hız, dengeli oyun deneyimi  
 - **Zor**: Hızlı hareket, deneyimli oyuncular için
 
 
-## 👥 Katkıda Bulunma
+### 👥 Katkıda Bulunma
 
 Projeye katkıda bulunmak isterseniz:
 
@@ -224,11 +224,9 @@ Projeye katkıda bulunmak isterseniz:
 4. Branch'i push edin (`git push origin yeni-ozellik`)
 5. Pull Request oluşturun
 
-## 📝 Lisans
+### 📝 Lisans
 
 Bu proje MIT lisansı altında yayınlanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakınız.
-
-
 
 ### 📞 İletişim
 
