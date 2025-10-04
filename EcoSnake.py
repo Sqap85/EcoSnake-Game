@@ -144,8 +144,8 @@ SQUARE_SIZE = 35
 # =============================================================================
 
 TARGET_FPS = 60
-COLLISION_TOLERANCE = SQUARE_SIZE // 2 
-CURSOR_BLINK_INTERVAL = 1000
+COLLISION_TOLERANCE = SQUARE_SIZE // 2
+CURSOR_BLINK_INTERVAL = TARGET_FPS * 16  # 16 frames = ~267ms at 60fps
 
 # =============================================================================
 # UI CONSTANTS
@@ -232,13 +232,13 @@ def load_sprite(filename, size=(SQUARE_SIZE, SQUARE_SIZE)):
         print(f"Warning: Could not load sprite '{filename}': {e}")
         # Create a placeholder colored rectangle
         placeholder = pygame.Surface(size)
-        placeholder.fill((100, 100, 100))  # Gray placeholder
+        placeholder.fill(GRAY)
         return placeholder
     except FileNotFoundError:
         print(f"Warning: Sprite file 'assets/{filename}' not found")
         # Create a placeholder colored rectangle
         placeholder = pygame.Surface(size)
-        placeholder.fill((100, 100, 100))  # Gray placeholder
+        placeholder.fill(GRAY)
         return placeholder
 
 def draw_menu_box(screen, box_rect, selected=False):
@@ -264,10 +264,6 @@ def safe_exit():
     """Safely exit the game"""
     pygame.quit()
     sys.exit()
-
-def handle_quit_event():
-    """Handle pygame QUIT event"""
-    safe_exit()
 
 # =============================================================================
 # AUTO-GENERATED GAME DATA
@@ -587,9 +583,6 @@ class TrashCollector:
         new_head = (new_x, new_y)
         self.squares = [new_head] + self.squares[:-1]
 
-    def collect_trash(self):
-        self.squares.append(self.squares[-1])
-
     def draw(self, screen):
         head_x, head_y = self.squares[0]
         screen.blit(self.character_sprite, (head_x, head_y))
@@ -722,8 +715,7 @@ def show_high_scores():
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN:
                     return
@@ -744,7 +736,7 @@ def enter_name():
         
         # Input box 
         box_rect = pygame.Rect(WINDOW_WIDTH//2 - NAME_INPUT_WIDTH//2, NAME_INPUT_Y, NAME_INPUT_WIDTH, NAME_INPUT_HEIGHT)
-        pygame.draw.rect(screen, (30, 30, 30), box_rect, 0, 10)
+        pygame.draw.rect(screen, MENU_BOX_COLOR, box_rect, 0, 10)
         pygame.draw.rect(screen, YELLOW if input_text else GRAY, box_rect, 3, 10)
         
         # Show written text
@@ -783,8 +775,7 @@ def enter_name():
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return False
@@ -841,8 +832,7 @@ def select_character():
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return  # Return to settings menu
@@ -888,7 +878,7 @@ def main_menu():
                 box_x = WINDOW_WIDTH//2 - MAIN_MENU_BOX_WIDTH//2
                 pygame.draw.rect(screen, DARK_GRAY, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 0, 12)
                 pygame.draw.rect(screen, CYAN, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 3, 12)
-                pygame.draw.rect(screen, (52, 73, 94), (box_x+5, y-MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH-10, MAIN_MENU_BOX_HEIGHT-10), 0, 10)
+                pygame.draw.rect(screen, DARK_GRAY, (box_x+5, y-MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH-10, MAIN_MENU_BOX_HEIGHT-10), 0, 10)
             
             text = font.render(option, True, color)
             text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
@@ -903,12 +893,10 @@ def main_menu():
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+                    safe_exit()
                 elif event.key == pygame.K_UP:
                     selected = (selected - 1) % len(options)
                 elif event.key == pygame.K_DOWN:
@@ -921,8 +909,7 @@ def main_menu():
                     elif selected == 2:  # Settings
                         return 'settings'
                     elif selected == 3:  # Exit
-                        pygame.quit()
-                        sys.exit()
+                        safe_exit()
 
 def settings_menu():
     options = [GAME_NAMES['select_character'], GAME_NAMES['select_background'], GAME_NAMES['select_garbage_bag']]
@@ -961,8 +948,7 @@ def settings_menu():
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return
@@ -1012,7 +998,7 @@ def select_background():
                     sprite_rect = preview.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
                     screen.blit(preview, sprite_rect)
                 except (pygame.error, ValueError, TypeError):
-                    color = (0, 100, 0) if name == 'Forest' else (30, 144, 255)
+                    color = GREEN if name == 'Forest' else BLUE
                     preview_rect = pygame.Rect(0, 0, LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE)
                     preview_rect.center = (box_x + LARGE_SPRITE_SIZE, y + 40)
                     pygame.draw.rect(screen, color, preview_rect, 0, 5)
@@ -1030,8 +1016,7 @@ def select_background():
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     selected = (selected - 1) % len(options)
@@ -1086,8 +1071,7 @@ def select_garbage_bag():
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     selected = (selected - 1) % len(options)
@@ -1133,8 +1117,7 @@ def select_difficulty():
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     selected = (selected - 1) % len(options)
@@ -1234,8 +1217,7 @@ def game_over_screen(score, difficulty_name):
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                safe_exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     return 'replay'
