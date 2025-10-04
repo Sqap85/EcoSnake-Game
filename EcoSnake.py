@@ -111,9 +111,9 @@ BACKGROUNDS_CONFIG = [
 
 # Garbage bags
 GARBAGE_BAGS_CONFIG = [
+    {'name': 'Black Bag', 'sprite': 'black_bag.png'},
     {'name': 'Sweet Bag', 'sprite': 'sweet_bag.png'},
     {'name': 'Yellow Bag', 'sprite': 'yellow_bag.png'},
-    {'name': 'Black Bag', 'sprite': 'black_bag.png'},
 ]
 
 # Trash items
@@ -121,7 +121,9 @@ TRASH_ITEMS_CONFIG = [
     {'name': 'Apple', 'sprite': 'apple.png'},
     {'name': 'Banana', 'sprite': 'banana.png'},
     {'name': 'Bottle', 'sprite': 'bottle.png'},
-    {'name': 'Landfill', 'sprite': 'landfill.png'},
+    {'name': 'Can', 'sprite': 'can.png'},
+    {'name': 'Glass Bottle', 'sprite': 'glass_bottle.png'},
+    {'name': 'Plastic Pollution', 'sprite': 'plastic-pollution.png'},
 ]
 
 # Difficulty levels
@@ -144,7 +146,8 @@ SQUARE_SIZE = 35
 # =============================================================================
 
 TARGET_FPS = 60
-COLLISION_TOLERANCE = SQUARE_SIZE // 2
+COLLISION_TOLERANCE = SQUARE_SIZE // 2  # For snake self-collision
+TRASH_COLLECTION_TOLERANCE = SQUARE_SIZE - 8  # More generous for trash collection
 CURSOR_BLINK_INTERVAL = TARGET_FPS * 16  # 16 frames = ~267ms at 60fps
 
 # =============================================================================
@@ -428,7 +431,7 @@ class GameSession:
         head_x, head_y = self.collector.squares[0]
         distance_x = abs(head_x - self.trash.x)
         distance_y = abs(head_y - self.trash.y)
-        collision = (distance_x <= COLLISION_TOLERANCE) and (distance_y <= COLLISION_TOLERANCE)
+        collision = (distance_x <= TRASH_COLLECTION_TOLERANCE) and (distance_y <= TRASH_COLLECTION_TOLERANCE)
         
         if collision:
             if move_time:
