@@ -144,7 +144,7 @@ SQUARE_SIZE = 35
 # =============================================================================
 
 TARGET_FPS = 60
-COLLISION_TOLERANCE = SQUARE_SIZE // 2
+COLLISION_TOLERANCE = SQUARE_SIZE // 2 
 CURSOR_BLINK_INTERVAL = 1000
 
 # =============================================================================
@@ -430,7 +430,9 @@ class GameSession:
         
         # Check trash collection
         head_x, head_y = self.collector.squares[0]
-        collision = (abs(head_x - self.trash.x) <= COLLISION_TOLERANCE) and (abs(head_y - self.trash.y) <= COLLISION_TOLERANCE)
+        distance_x = abs(head_x - self.trash.x)
+        distance_y = abs(head_y - self.trash.y)
+        collision = (distance_x <= COLLISION_TOLERANCE) and (distance_y <= COLLISION_TOLERANCE)
         
         if collision:
             if move_time:
@@ -596,8 +598,13 @@ class TrashCollector:
             screen.blit(selected_garbage_sprite, (x, y))
 
     def check_collision(self):
-        head = self.squares[0]
-        return head in self.squares[1:]
+        head_x, head_y = self.squares[0]
+        # Check if head collides with any body segment with tolerance
+        for segment_x, segment_y in self.squares[1:]:
+            if (abs(head_x - segment_x) <= COLLISION_TOLERANCE and 
+                abs(head_y - segment_y) <= COLLISION_TOLERANCE):
+                return True
+        return False
 
 class Trash:
     def __init__(self):
