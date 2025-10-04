@@ -108,6 +108,7 @@ GARBAGE_BAGS_CONFIG = [
 TRASH_ITEMS_CONFIG = [
     {'name': 'Apple', 'sprite': 'apple.png'},
     {'name': 'Banana', 'sprite': 'banana.png'},
+    {'name': 'Battery', 'sprite': 'battery.png'},
     {'name': 'Bottle', 'sprite': 'bottle.png'},
     {'name': 'Can', 'sprite': 'can.png'},
     {'name': 'Glass Bottle', 'sprite': 'glass_bottle.png'},
@@ -125,9 +126,9 @@ DIFFICULTY_CONFIG = [
 # GAME SETTINGS
 # =============================================================================
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
 SQUARE_SIZE = 35
+WINDOW_WIDTH = 25 * SQUARE_SIZE  
+WINDOW_HEIGHT = 17 * SQUARE_SIZE  
 
 # =============================================================================
 # GAME LOGIC CONSTANTS
@@ -147,15 +148,15 @@ CURSOR_BLINK_INTERVAL = TARGET_FPS * CURSOR_BLINK_FRAMES  # Cursor blink timing
 # =============================================================================
 
 # Base UI Layout
-UI_AREA_HEIGHT = 45
+UI_AREA_HEIGHT = SQUARE_SIZE
 UI_BORDER_HEIGHT = 2
-UI_PADDING = 15
+UI_PADDING = 10
 EDGE_MARGIN = 15
 
-# Menu Positioning
-MAIN_MENU_START_Y = 220
-MENU_START_Y = 160
-DIFFICULTY_START_Y = 220
+# Menu Positioning (dynamic based on window height)
+MAIN_MENU_START_Y = WINDOW_HEIGHT * 220 // 600
+MENU_START_Y = WINDOW_HEIGHT * 160 // 600
+DIFFICULTY_START_Y = WINDOW_HEIGHT * 220 // 600
 
 # Menu Spacing
 MENU_ITEM_SPACING = 60
@@ -163,23 +164,29 @@ MENU_ITEM_HEIGHT = 50
 MENU_VERTICAL_SPACING = 140
 DIFFICULTY_ITEM_SPACING = 50
 
-# Name Input Positioning
-NAME_INPUT_Y = 220
-NAME_INPUT_TITLE_Y = 150
-NAME_INPUT_RULE_Y = 300
-NAME_INPUT_CONFIRM_Y = 380
-NAME_INPUT_ESC_Y = 420
+# Name Input Positioning (dynamic)
+NAME_INPUT_Y = WINDOW_HEIGHT * 220 // 600
+NAME_INPUT_TITLE_Y = WINDOW_HEIGHT * 150 // 600
+NAME_INPUT_RULE_Y = WINDOW_HEIGHT * 300 // 600
+NAME_INPUT_CONFIRM_Y = WINDOW_HEIGHT * 380 // 600
+NAME_INPUT_ESC_Y = WINDOW_HEIGHT * 420 // 600
 
-# Game Over Screen Positioning
-GAME_OVER_OPTION_Y_START = 350
+# Game Over Screen Positioning (dynamic)
+GAME_OVER_OPTION_Y_START = WINDOW_HEIGHT * 350 // 600
 GAME_OVER_OPTION_Y_SPACING = 30
 
 # Table and Line Positioning
-HIGH_SCORES_TABLE_POSITIONS = [150, 200, 400, 500]
-TITLE_LINE_Y = 110
-TITLE_LINE_MARGIN = 100
-SETTINGS_LINE_MARGIN = 100
-SETTINGS_SEPARATOR_LINE_Y = 112
+# High scores table columns (dynamically centered based on window width)
+HIGH_SCORES_TABLE_POSITIONS = [
+    WINDOW_WIDTH // 5,           
+    WINDOW_WIDTH // 5 + 50,      
+    WINDOW_WIDTH // 2,          
+    WINDOW_WIDTH * 3 // 4 - 40   
+]
+TITLE_LINE_Y = WINDOW_HEIGHT // 10 + 30  # Below title, more spacing
+TITLE_LINE_MARGIN = WINDOW_WIDTH // 8    
+SETTINGS_LINE_MARGIN = WINDOW_WIDTH // 8
+SETTINGS_SEPARATOR_LINE_Y = TITLE_LINE_Y + 3  # Just below main line
 
 # Dynamic positioning
 TITLE_Y_OFFSET = WINDOW_HEIGHT // 10  # 80 at default 600px height
@@ -198,7 +205,7 @@ CURSOR_TEXT_SPACING = 3     # Space between text and cursor
 INFO_TEXT_Y_BOTTOM = WINDOW_HEIGHT - 80  # 520 at default 600px height
 SETTINGS_BACK_Y = WINDOW_HEIGHT - 180    # 420 at default 600px height
 
-# Character info positioning (top-left corner)
+# Character info positioning (top-left corner in main menu)
 CHARACTER_INFO_START_X = 20
 CHARACTER_INFO_START_Y = 20
 CHARACTER_INFO_LINE_HEIGHT = 20

@@ -547,14 +547,16 @@ class Game:
         pygame.draw.rect(self.screen, DARK_GRAY, (0, 0, WINDOW_WIDTH, UI_AREA_HEIGHT))
         pygame.draw.rect(self.screen, LIGHT_GRAY, (0, UI_AREA_HEIGHT - UI_BORDER_HEIGHT, WINDOW_WIDTH, UI_BORDER_HEIGHT))
         
-        # Player info
+        # Player info - vertically centered in UI area
         player_text = self.small_font.render(f"{self.game_state.player_name}: {score} {GAME_NAMES['trash_collected']}", True, LIGHT_GRAY)
-        self.screen.blit(player_text, (UI_PADDING, UI_PADDING))
+        text_height = player_text.get_height()
+        text_y = (UI_AREA_HEIGHT - text_height) // 2
+        self.screen.blit(player_text, (UI_PADDING, text_y))
         
-        # ESC info
+        # ESC info - vertically centered in UI area
         esc_text = self.small_font.render(GAME_NAMES['main_menu_instruction'], True, LIGHT_GRAY)
         esc_width = esc_text.get_width()
-        self.screen.blit(esc_text, (WINDOW_WIDTH - esc_width - UI_PADDING, UI_PADDING))
+        self.screen.blit(esc_text, (WINDOW_WIDTH - esc_width - UI_PADDING, text_y))
         
         pygame.display.flip()
     
