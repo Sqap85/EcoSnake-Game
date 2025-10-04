@@ -5,12 +5,14 @@
 ## English
 
 ### 🎮 About the Game
+---
 
 EcoSnake is a fun and educational environmental protection game! Collect trash to keep nature clean and develop environmental awareness.
 
 This game is an educational Python game designed to develop environmental awareness. The player keeps the environment clean by collecting different types of trash. EcoSnake combines classic Snake game mechanics with an environmental protection theme.
 
 ### 🚀 Installation and Running
+---
 
 #### Requirements
 - Python 3.6 or higher
@@ -75,6 +77,7 @@ python EcoSnake.py
 - macOS/Linux: `python3 EcoSnake.py`
 
 ### 🎯 How to Play?
+---
 
 #### Controls:
 - **↑ ↓ ← →** : Use arrow keys for movement
@@ -94,6 +97,7 @@ python EcoSnake.py
 - **Hard**: Fast movement, for experienced players
 
 ### 👥 Contributing
+---
 
 If you want to contribute to the project:
 
@@ -104,10 +108,12 @@ If you want to contribute to the project:
 5. Create a Pull Request
 
 ### 📝 License
+---
 
 This project is published under the MIT license. See the [LICENSE](LICENSE) file for details.
 
 ### 📞 Contact
+---
 
 For questions or suggestions:
 - GitHub Issues section  
@@ -122,12 +128,14 @@ For questions or suggestions:
 ## Türkçe
 
 ### 🎮 Oyun Hakkında
+---
 
 EcoSnake eğlenceli ve eğitici bir çevre koruma oyunu! Çöpleri toplayarak doğayı temiz tut ve çevre bilincini geliştir.
 
 Bu oyun, çevre bilincini geliştirmek amacıyla tasarlanmış eğitici bir Python oyunudur. Oyuncu, farklı türdeki çöpleri toplayarak çevreyi temiz tutar. EcoSnake, klasik Yılan oyunu mekaniğini çevre koruma temasıyla birleştirir.
 
 ### 🚀 Kurulum ve Çalıştırma
+---
 
 #### Gereksinimler
 
@@ -195,6 +203,7 @@ python EcoSnake.py
 - macOS/Linux: `python3 EcoSnake.py`
 
 ### 🎯 Nasıl Oynanır?
+---
 
 #### Kontroller:
 - **↑ ↓ ← →** : Hareket için ok tuşlarını kullanın
@@ -215,6 +224,7 @@ python EcoSnake.py
 
 
 ### 👥 Katkıda Bulunma
+---
 
 Projeye katkıda bulunmak isterseniz:
 
@@ -225,10 +235,12 @@ Projeye katkıda bulunmak isterseniz:
 5. Pull Request oluşturun
 
 ### 📝 Lisans
+---
 
 Bu proje MIT lisansı altında yayınlanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakınız.
 
 ### 📞 İletişim
+---
 
 Sorularınız veya önerileriniz için:
 - GitHub Issues bölümü
