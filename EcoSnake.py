@@ -17,8 +17,9 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 pygame.init()
 
 # =============================================================================
-# NAMING CONFIGURATION
+# GAME TEXT CONFIGURATION
 # =============================================================================
+
 GAME_NAMES = {
     # Main game elements
     'game_title': 'EcoSnake Game',
@@ -30,36 +31,10 @@ GAME_NAMES = {
     'settings': 'Settings',
     'exit': 'Exit',
     
-    # Characters
-    'character1': 'Gardener',
-    'character2': 'Blonde Girl', 
-    'character3': 'Chubby Child',
-    
-    # Backgrounds
-    'background1': 'Black',
-    'background2': 'Forest',
-    'background3': 'Beach',
-    
-    # Garbage bags
-    'garbage_bag1': 'Sweet Bag',
-    'garbage_bag2': 'Yellow Bag',
-    'garbage_bag3': 'Black Bag',
-    
-    # Collected trash items
-    'trash1': 'Apple',
-    'trash2': 'Banana', 
-    'trash3': 'Bottle',
-    'trash4': 'Landfill',
-    
-    # Difficulty levels
-    'difficulty1': 'Easy',
-    'difficulty2': 'Medium',
-    'difficulty3': 'Hard',
-    
     # Settings menu
-    'select_character': 'Select Character',
-    'select_background': 'Select Background',
-    'select_garbage_bag': 'Select Garbage Bag',
+    'select_character': 'Character',
+    'select_background': 'Background',
+    'select_garbage_bag': 'Garbage Bag',
     
     # UI messages
     'enter_player_name': 'ENTER PLAYER NAME',
@@ -96,7 +71,10 @@ GAME_NAMES = {
     'trash_collected': 'trash collected'
 }
 
-# Color Palette
+# =============================================================================
+# COLOR PALETTE
+# =============================================================================
+
 BLACK = (20, 20, 30)
 WHITE = (250, 250, 255)
 GREEN = (46, 204, 113)
@@ -111,52 +89,140 @@ ORANGE = (230, 126, 34)
 CYAN = (26, 188, 156)
 DARK_GRAY = (52, 73, 94)
 LIGHT_GRAY = (200, 210, 215)
+MENU_BOX_COLOR = (30, 30, 35)
 
-# Game settings
+# =============================================================================
+# GAME ELEMENTS CONFIGURATION
+# =============================================================================
+
+# Characters
+CHARACTERS_CONFIG = [
+    {'name': 'Gardener', 'sprite': 'gardener.png'},
+    {'name': 'Blonde Girl', 'sprite': 'blonde_girl.png'},
+    {'name': 'Chubby Child', 'sprite': 'chubby_child.png'},
+]
+
+# Backgrounds
+BACKGROUNDS_CONFIG = [
+    {'name': 'Black', 'sprite': None},  # No sprite for black background
+    {'name': 'Forest', 'sprite': 'forest.png'},
+    {'name': 'Beach', 'sprite': 'beach.png'},
+]
+
+# Garbage bags
+GARBAGE_BAGS_CONFIG = [
+    {'name': 'Sweet Bag', 'sprite': 'sweet_bag.png'},
+    {'name': 'Yellow Bag', 'sprite': 'yellow_bag.png'},
+    {'name': 'Black Bag', 'sprite': 'black_bag.png'},
+]
+
+# Trash items
+TRASH_ITEMS_CONFIG = [
+    {'name': 'Apple', 'sprite': 'apple.png'},
+    {'name': 'Banana', 'sprite': 'banana.png'},
+    {'name': 'Bottle', 'sprite': 'bottle.png'},
+    {'name': 'Landfill', 'sprite': 'landfill.png'},
+]
+
+# Difficulty levels
+DIFFICULTY_CONFIG = [
+    {'name': 'Easy', 'speed': 5, 'color': GREEN},
+    {'name': 'Medium', 'speed': 10, 'color': ORANGE},
+    {'name': 'Hard', 'speed': 18, 'color': RED},
+]
+
+# =============================================================================
+# GAME SETTINGS
+# =============================================================================
+
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
-SQUARE_SIZE = 30
+SQUARE_SIZE = 35
 
-# UI Constants
-UI_AREA_HEIGHT = 45
-UI_BORDER_HEIGHT = 2
-MENU_BOX_WIDTH = 500
-MENU_BOX_HEIGHT = 120
-MENU_ITEM_SPACING = 60
-MENU_ITEM_HEIGHT = 50
-EDGE_MARGIN = 15
-LARGE_SPRITE_SIZE = 80
-NAME_INPUT_WIDTH = 400
-NAME_INPUT_HEIGHT = 60
-MAX_NAME_LENGTH = 12
-MIN_NAME_LENGTH = 2
+# =============================================================================
+# GAME LOGIC CONSTANTS
+# =============================================================================
 
-# Game Logic Constants
 TARGET_FPS = 60
 COLLISION_TOLERANCE = SQUARE_SIZE // 2
 CURSOR_BLINK_INTERVAL = 1000
+
+# =============================================================================
+# UI CONSTANTS
+# =============================================================================
+
+# UI Layout Constants
+UI_AREA_HEIGHT = 45
+UI_BORDER_HEIGHT = 2
 UI_PADDING = 15
+EDGE_MARGIN = 15
 
-SPEEDS = {
-    GAME_NAMES['difficulty1']: 5,
-    GAME_NAMES['difficulty2']: 10,
-    GAME_NAMES['difficulty3']: 18
-}
+# Main Menu Constants
+MAIN_MENU_START_Y = 220
+MAIN_MENU_BOX_WIDTH = 250
+MAIN_MENU_BOX_HEIGHT = 50
+MAIN_MENU_BOX_Y_OFFSET = 25
 
-# Difficulty colors
-DIFFICULTY_COLORS = {
-    GAME_NAMES['difficulty1']: GREEN,
-    GAME_NAMES['difficulty2']: ORANGE, 
-    GAME_NAMES['difficulty3']: RED
-}
-FPS = 60
+# Settings Menu Constants
+MENU_BOX_WIDTH = 500
+MENU_BOX_HEIGHT = 120
+MENU_START_Y = 160
+MENU_BOX_Y_OFFSET = 20
+MENU_ITEM_SPACING = 60
+MENU_ITEM_HEIGHT = 50
+MENU_VERTICAL_SPACING = 140
+
+# Input & Sprites Constants
+NAME_INPUT_WIDTH = 400
+NAME_INPUT_HEIGHT = 60
+LARGE_SPRITE_SIZE = 80
+
+# Text Constraints
+MAX_NAME_LENGTH = 12
+MIN_NAME_LENGTH = 2
+
+# Difficulty Menu Constants
+DIFFICULTY_BOX_WIDTH = 200
+DIFFICULTY_BOX_HEIGHT = 40
+DIFFICULTY_START_Y = 220
+DIFFICULTY_ITEM_SPACING = 50
+DIFFICULTY_BOX_Y_OFFSET = 20
+
+# Name Input Constants
+NAME_INPUT_Y = 220
+NAME_INPUT_TITLE_Y = 150
+NAME_INPUT_RULE_Y = 300
+NAME_INPUT_CONFIRM_Y = 380
+NAME_INPUT_ESC_Y = 420
+
+# High Scores Constants
+HIGH_SCORES_TABLE_POSITIONS = [150, 200, 400, 500]
+
+# Game Over Constants
+GAME_OVER_OPTION_Y_START = 350
+GAME_OVER_OPTION_Y_SPACING = 30
+
+# Title Line Constants
+TITLE_LINE_Y = 110
+TITLE_LINE_MARGIN = 100
+
+# =============================================================================
+# PYGAME INITIALIZATION
+# =============================================================================
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("EcoSnake-Game")
 clock = pygame.time.Clock()
 
+# Create fonts
+font = pygame.font.Font(None, 36)
+large_font = pygame.font.Font(None, 48)
+small_font = pygame.font.Font(None, 24)
 
-# Sprite loading function
+# =============================================================================
+# HELPER FUNCTIONS
+# =============================================================================
+
 def load_sprite(filename, size=(SQUARE_SIZE, SQUARE_SIZE)):
     """Load and scale a sprite with error handling"""
     try:
@@ -175,65 +241,82 @@ def load_sprite(filename, size=(SQUARE_SIZE, SQUARE_SIZE)):
         placeholder.fill((100, 100, 100))  # Gray placeholder
         return placeholder
 
-# Characters
-CHARACTERS = {
-    GAME_NAMES['character1']: load_sprite("gardener.png"),
-    GAME_NAMES['character2']: load_sprite("blonde_girl.png"),
-    GAME_NAMES['character3']: load_sprite("chubby_child.png")
-}
-
-# Trash types
-TRASH_SPRITES = {
-    GAME_NAMES['trash1']: load_sprite("apple.png"),
-    GAME_NAMES['trash2']: load_sprite("banana.png"),
-    GAME_NAMES['trash3']: load_sprite("bottle.png"),
-    GAME_NAMES['trash4']: load_sprite("landfill.png")
-}
-
-# Garbage bags
-GARBAGE_BAGS = {
-    GAME_NAMES['garbage_bag1']: load_sprite("sweet_bag.png"),
-    GAME_NAMES['garbage_bag2']: load_sprite("yellow_bag.png"),
-    GAME_NAMES['garbage_bag3']: load_sprite("black_bag.png")
-}
-
-# Backgrounds
-BACKGROUNDS = {
-    GAME_NAMES['background2']: load_sprite("forest.png", (WINDOW_WIDTH, WINDOW_HEIGHT)),
-    GAME_NAMES['background3']: load_sprite("beach.png", (WINDOW_WIDTH, WINDOW_HEIGHT))
-}
-
-# Create fonts
-font = pygame.font.Font(None, 36)
-large_font = pygame.font.Font(None, 48)
-small_font = pygame.font.Font(None, 24)
-
-# Menu helper functions
 def draw_menu_box(screen, box_rect, selected=False):
+    """Draw a menu box with selection highlighting"""
     if selected:
         pygame.draw.rect(screen, DARK_GRAY, box_rect, 0, 15)
         pygame.draw.rect(screen, CYAN, box_rect, 4, 15)
     else:
-        pygame.draw.rect(screen, (30, 30, 35), box_rect, 0, 15)
+        pygame.draw.rect(screen, MENU_BOX_COLOR, box_rect, 0, 15)
         pygame.draw.rect(screen, LIGHT_GRAY, box_rect, 2, 15)
 
 def draw_score_line(screen, i, score_info, y_pos, positions):
+    """Draw a single score line in the high scores table"""
     colors = [YELLOW, LIGHT_GRAY, ORANGE, CYAN, CYAN, GRAY, GRAY, GRAY, GRAY, GRAY]
     color = colors[i] if i < len(colors) else GRAY
     
-    texts = [f"{i+1}.", score_info['name'][:12], str(score_info['score']), score_info['difficulty']]
+    texts = [f"{i+1}.", score_info['name'][:MAX_NAME_LENGTH], str(score_info['score']), score_info['difficulty']]
     for text, x_pos in zip(texts, positions):
         text_surface = small_font.render(text, True, color)
         screen.blit(text_surface, (x_pos, y_pos))
 
+def safe_exit():
+    """Safely exit the game"""
+    pygame.quit()
+    sys.exit()
 
-# Game State Management
+def handle_quit_event():
+    """Handle pygame QUIT event"""
+    safe_exit()
+
+# =============================================================================
+# AUTO-GENERATED GAME DATA
+# =============================================================================
+
+# Auto-generated difficulty settings
+SPEEDS = {
+    diff['name']: diff['speed']
+    for diff in DIFFICULTY_CONFIG
+}
+
+DIFFICULTY_COLORS = {
+    diff['name']: diff['color']
+    for diff in DIFFICULTY_CONFIG
+}
+
+# Auto-generated sprites
+CHARACTERS = {
+    char['name']: load_sprite(char['sprite']) 
+    for char in CHARACTERS_CONFIG
+}
+
+TRASH_SPRITES = {
+    item['name']: load_sprite(item['sprite'])
+    for item in TRASH_ITEMS_CONFIG
+}
+
+GARBAGE_BAGS = {
+    bag['name']: load_sprite(bag['sprite'])
+    for bag in GARBAGE_BAGS_CONFIG
+}
+
+BACKGROUNDS = {
+    bg['name']: load_sprite(bg['sprite'], (WINDOW_WIDTH, WINDOW_HEIGHT))
+    for bg in BACKGROUNDS_CONFIG 
+    if bg['sprite'] is not None 
+}
+
+# =============================================================================
+# GAME STATE MANAGEMENT
+# =============================================================================
+
 class GameState:
     def __init__(self):
         self.player_name = ""
-        self.selected_character = GAME_NAMES['character1']
-        self.selected_background = GAME_NAMES['background1']
-        self.selected_garbage = GAME_NAMES['garbage_bag1']
+        # Default selections from configuration
+        self.selected_character = CHARACTERS_CONFIG[0]['name']
+        self.selected_background = BACKGROUNDS_CONFIG[0]['name']
+        self.selected_garbage = GARBAGE_BAGS_CONFIG[0]['name']
     
     def save_settings(self):
         """Save current settings to JSON file with error handling"""
@@ -255,9 +338,9 @@ class GameState:
         try:
             with open('settings.json', 'r', encoding='utf-8') as f:
                 settings = json.load(f)
-                self.selected_character = settings.get('selected_character', GAME_NAMES['character1'])
-                self.selected_background = settings.get('selected_background', GAME_NAMES['background1'])
-                self.selected_garbage = settings.get('selected_garbage', GAME_NAMES['garbage_bag1'])
+                self.selected_character = settings.get('selected_character', CHARACTERS_CONFIG[0]['name'])
+                self.selected_background = settings.get('selected_background', BACKGROUNDS_CONFIG[0]['name'])
+                self.selected_garbage = settings.get('selected_garbage', GARBAGE_BAGS_CONFIG[0]['name'])
         except FileNotFoundError:
             print("Info: Settings file not found, using defaults")
             self._set_default_settings()
@@ -273,9 +356,10 @@ class GameState:
     
     def _set_default_settings(self):
         """Set default settings values"""
-        self.selected_character = GAME_NAMES['character1']
-        self.selected_background = GAME_NAMES['background1']
-        self.selected_garbage = GAME_NAMES['garbage_bag1']
+        # Default selections from configuration
+        self.selected_character = CHARACTERS_CONFIG[0]['name']
+        self.selected_background = BACKGROUNDS_CONFIG[0]['name']
+        self.selected_garbage = GARBAGE_BAGS_CONFIG[0]['name']
 
 # Global game state instance
 game_state = GameState()
@@ -371,8 +455,8 @@ class GameSession:
         self.trash.draw(screen)
         
         # Draw UI
-        pygame.draw.rect(screen, DARK_GRAY, (0, 0, WINDOW_WIDTH, 45))
-        pygame.draw.rect(screen, LIGHT_GRAY, (0, 43, WINDOW_WIDTH, 2))
+        pygame.draw.rect(screen, DARK_GRAY, (0, 0, WINDOW_WIDTH, UI_AREA_HEIGHT))
+        pygame.draw.rect(screen, LIGHT_GRAY, (0, UI_AREA_HEIGHT - UI_BORDER_HEIGHT, WINDOW_WIDTH, UI_BORDER_HEIGHT))
         
         # Left side - Player info
         player_text = small_font.render(f"{self.player_name}: {self.score} {GAME_NAMES['trash_collected']}", True, LIGHT_GRAY)
@@ -469,15 +553,9 @@ class GameManager:
             # Run the game session
             self.run_game_session(player_name, difficulty_name, game_speed)
 
-# Utility Functions
-def safe_exit():
-    """Safely exit the game"""
-    pygame.quit()
-    sys.exit()
-
-def handle_quit_event():
-    """Handle pygame QUIT event"""
-    safe_exit()
+# =============================================================================
+# GAME OBJECTS
+# =============================================================================
 
 class TrashCollector:
     def __init__(self, character_sprite):
@@ -493,8 +571,6 @@ class TrashCollector:
         head_x, head_y = self.squares[0]
         new_x = head_x + self.dir_x * SQUARE_SIZE
         new_y = head_y + self.dir_y * SQUARE_SIZE
-        
-        UI_AREA_HEIGHT = 45
         
         if new_x < 0:
             new_x = WINDOW_WIDTH - SQUARE_SIZE
@@ -539,7 +615,9 @@ class Trash:
     def draw(self, screen):
         screen.blit(self.sprite, (self.x, self.y))
 
-# Score table functions
+# =============================================================================
+# FILE MANAGEMENT FUNCTIONS
+# =============================================================================
 def save_score(name, score, difficulty):
     """Save player score with comprehensive error handling"""
     try:
@@ -614,7 +692,7 @@ def show_high_scores():
             screen.blit(message, message_rect)
         else:
             y_pos = 130
-            positions = [150, 200, 400, 500]
+            positions = HIGH_SCORES_TABLE_POSITIONS
             headers = [GAME_NAMES['rank'], GAME_NAMES['name'], GAME_NAMES['score'], GAME_NAMES['difficulty_header']]
             
             for header, x_pos in zip(headers, positions):
@@ -643,6 +721,10 @@ def show_high_scores():
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN:
                     return
 
+# =============================================================================
+# MENU & UI FUNCTIONS
+# =============================================================================
+
 def enter_name():
     input_text = ""
     while True:
@@ -650,11 +732,11 @@ def enter_name():
         
         # Title
         title = large_font.render(GAME_NAMES['enter_player_name'], True, YELLOW)
-        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 150))
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, NAME_INPUT_TITLE_Y))
         screen.blit(title, title_rect)
         
         # Input box 
-        box_rect = pygame.Rect(WINDOW_WIDTH//2 - 200, 220, 400, 60)
+        box_rect = pygame.Rect(WINDOW_WIDTH//2 - NAME_INPUT_WIDTH//2, NAME_INPUT_Y, NAME_INPUT_WIDTH, NAME_INPUT_HEIGHT)
         pygame.draw.rect(screen, (30, 30, 30), box_rect, 0, 10)
         pygame.draw.rect(screen, YELLOW if input_text else GRAY, box_rect, 3, 10)
         
@@ -676,18 +758,18 @@ def enter_name():
         
         # Rules
         rule = small_font.render(GAME_NAMES['name_length_rule'], True, GRAY)
-        rule_rect = rule.get_rect(center=(WINDOW_WIDTH//2, 300))
+        rule_rect = rule.get_rect(center=(WINDOW_WIDTH//2, NAME_INPUT_RULE_Y))
         screen.blit(rule, rule_rect)
         
         # Instructions
         enter_active = len(input_text.strip()) >= 2
         enter_color = GREEN if enter_active else GRAY
         enter_text = font.render(GAME_NAMES['confirm_button'], True, enter_color)
-        enter_rect = enter_text.get_rect(center=(WINDOW_WIDTH//2, 380))
+        enter_rect = enter_text.get_rect(center=(WINDOW_WIDTH//2, NAME_INPUT_CONFIRM_Y))
         screen.blit(enter_text, enter_rect)
         
         esc_text = small_font.render(GAME_NAMES['return_instruction'], True, GRAY)
-        esc_rect = esc_text.get_rect(center=(WINDOW_WIDTH//2, 420))
+        esc_rect = esc_text.get_rect(center=(WINDOW_WIDTH//2, NAME_INPUT_ESC_Y))
         screen.blit(esc_text, esc_rect)
         
         pygame.display.flip()
@@ -706,7 +788,7 @@ def enter_name():
                 elif event.key == pygame.K_BACKSPACE:
                     input_text = input_text[:-1]
                 else:
-                    if event.unicode.isprintable() and len(input_text) < 12:
+                    if event.unicode.isprintable() and len(input_text) < MAX_NAME_LENGTH:
                         input_text += event.unicode
 
 def select_character():
@@ -720,25 +802,22 @@ def select_character():
         title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
         screen.blit(title, title_rect)
         
-        pygame.draw.line(screen, CYAN, (100, 110), (WINDOW_WIDTH-100, 110), 3)
+        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), 3)
         
         # Show characters
-        start_y = 160
         for i, name in enumerate(character_names):
-            y = start_y + i * 140
+            y = MENU_START_Y + i * MENU_VERTICAL_SPACING
             is_selected = (i == selected)
             
-            box_width = 500
-            box_height = 120
-            box_x = WINDOW_WIDTH//2 - box_width//2
-            box_rect = pygame.Rect(box_x, y-20, box_width, box_height)
+            box_x = WINDOW_WIDTH//2 - MENU_BOX_WIDTH//2
+            box_rect = pygame.Rect(box_x, y-MENU_BOX_Y_OFFSET, MENU_BOX_WIDTH, MENU_BOX_HEIGHT)
             
             draw_menu_box(screen, box_rect, is_selected)
             
             # Show character sprite
             character_sprite = CHARACTERS[name]
-            large_sprite = pygame.transform.scale(character_sprite, (80, 80))
-            sprite_rect = large_sprite.get_rect(center=(box_x + 80, y + 40))
+            large_sprite = pygame.transform.scale(character_sprite, (LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE))
+            sprite_rect = large_sprite.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
             screen.blit(large_sprite, sprite_rect)
             
             color = CYAN if is_selected else WHITE
@@ -794,15 +873,15 @@ def main_menu():
         screen.blit(garbage_text, (20, 60))
         
         # Menu options
-        menu_start_y = 220
         for i, option in enumerate(options):
             color = WHITE if i == selected else LIGHT_GRAY
-            y = menu_start_y + i * 60
+            y = MAIN_MENU_START_Y + i * MENU_ITEM_SPACING
             
             if i == selected:
-                pygame.draw.rect(screen, DARK_GRAY, (250, y-25, 300, 50), 0, 12)
-                pygame.draw.rect(screen, CYAN, (250, y-25, 300, 50), 3, 12)
-                pygame.draw.rect(screen, (52, 73, 94), (255, y-20, 290, 40), 0, 10)
+                box_x = WINDOW_WIDTH//2 - MAIN_MENU_BOX_WIDTH//2
+                pygame.draw.rect(screen, DARK_GRAY, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 0, 12)
+                pygame.draw.rect(screen, CYAN, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 3, 12)
+                pygame.draw.rect(screen, (52, 73, 94), (box_x+5, y-MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH-10, MAIN_MENU_BOX_HEIGHT-10), 0, 10)
             
             text = font.render(option, True, color)
             text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
@@ -849,18 +928,18 @@ def settings_menu():
         title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
         screen.blit(title, title_rect)
         
-        pygame.draw.line(screen, CYAN, (100, 110), (WINDOW_WIDTH-100, 110), 3)
+        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), 3)
         pygame.draw.line(screen, DARK_GRAY, (100, 112), (WINDOW_WIDTH-100, 112), 1)
         
         # Menu options
-        menu_start_y = 160
         for i, option in enumerate(options):
             color = WHITE if i == selected else LIGHT_GRAY
-            y = menu_start_y + i * 60
+            y = MENU_START_Y + i * MENU_ITEM_SPACING
             
             if i == selected:
-                pygame.draw.rect(screen, DARK_GRAY, (250, y-25, 300, 50), 0, 10)
-                pygame.draw.rect(screen, CYAN, (250, y-25, 300, 50), 3, 10)
+                box_x = WINDOW_WIDTH//2 - MAIN_MENU_BOX_WIDTH//2
+                pygame.draw.rect(screen, DARK_GRAY, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 0, 10)
+                pygame.draw.rect(screen, CYAN, (box_x, y-MAIN_MENU_BOX_Y_OFFSET, MAIN_MENU_BOX_WIDTH, MAIN_MENU_BOX_HEIGHT), 3, 10)
             
             text = font.render(option, True, color)
             text_rect = text.get_rect(center=(WINDOW_WIDTH//2, y))
@@ -893,7 +972,7 @@ def settings_menu():
                         select_garbage_bag()
 
 def select_background():
-    options = [GAME_NAMES['background1'], GAME_NAMES['background2'], GAME_NAMES['background3']]
+    options = [bg['name'] for bg in BACKGROUNDS_CONFIG]
     selected = options.index(game_state.selected_background) if game_state.selected_background in options else 0
     
     while True:
@@ -903,35 +982,32 @@ def select_background():
         title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
         screen.blit(title, title_rect)
         
-        pygame.draw.line(screen, CYAN, (100, 110), (WINDOW_WIDTH-100, 110), 3)
+        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), 3)
         
         # Show backgrounds
-        start_y = 160
         for i, name in enumerate(options):
-            y = start_y + i * 140
+            y = MENU_START_Y + i * MENU_VERTICAL_SPACING
             is_selected = (i == selected)
             
-            box_width = 500
-            box_height = 120
-            box_x = WINDOW_WIDTH//2 - box_width//2
-            box_rect = pygame.Rect(box_x, y-20, box_width, box_height)
+            box_x = WINDOW_WIDTH//2 - MENU_BOX_WIDTH//2
+            box_rect = pygame.Rect(box_x, y-MENU_BOX_Y_OFFSET, MENU_BOX_WIDTH, MENU_BOX_HEIGHT)
             
             draw_menu_box(screen, box_rect, is_selected)
             
             # Background preview
-            if name == GAME_NAMES['background1']:
-                preview_rect = pygame.Rect(0, 0, 80, 80)
-                preview_rect.center = (box_x + 80, y + 40)
+            if name == 'Black':
+                preview_rect = pygame.Rect(0, 0, LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE)
+                preview_rect.center = (box_x + LARGE_SPRITE_SIZE, y + 40)
                 pygame.draw.rect(screen, BLACK, preview_rect, 0, 5)
             elif name in BACKGROUNDS:
                 try:
-                    preview = pygame.transform.scale(BACKGROUNDS[name], (80, 80))
-                    sprite_rect = preview.get_rect(center=(box_x + 80, y + 40))
+                    preview = pygame.transform.scale(BACKGROUNDS[name], (LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE))
+                    sprite_rect = preview.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
                     screen.blit(preview, sprite_rect)
                 except (pygame.error, ValueError, TypeError):
-                    color = (0, 100, 0) if name == GAME_NAMES['background2'] else (30, 144, 255)
-                    preview_rect = pygame.Rect(0, 0, 80, 80)
-                    preview_rect.center = (box_x + 80, y + 40)
+                    color = (0, 100, 0) if name == 'Forest' else (30, 144, 255)
+                    preview_rect = pygame.Rect(0, 0, LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE)
+                    preview_rect.center = (box_x + LARGE_SPRITE_SIZE, y + 40)
                     pygame.draw.rect(screen, color, preview_rect, 0, 5)
             
             color = CYAN if is_selected else WHITE
@@ -972,25 +1048,22 @@ def select_garbage_bag():
         title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 80))
         screen.blit(title, title_rect)
         
-        pygame.draw.line(screen, CYAN, (100, 110), (WINDOW_WIDTH-100, 110), 3)
+        pygame.draw.line(screen, CYAN, (TITLE_LINE_MARGIN, TITLE_LINE_Y), (WINDOW_WIDTH-TITLE_LINE_MARGIN, TITLE_LINE_Y), 3)
         
         # Show garbage bags
-        start_y = 160
         for i, name in enumerate(options):
-            y = start_y + i * 140
+            y = MENU_START_Y + i * MENU_VERTICAL_SPACING
             is_selected = (i == selected)
             
-            box_width = 500
-            box_height = 120
-            box_x = WINDOW_WIDTH//2 - box_width//2
-            box_rect = pygame.Rect(box_x, y-20, box_width, box_height)
+            box_x = WINDOW_WIDTH//2 - MENU_BOX_WIDTH//2
+            box_rect = pygame.Rect(box_x, y-MENU_BOX_Y_OFFSET, MENU_BOX_WIDTH, MENU_BOX_HEIGHT)
             
             draw_menu_box(screen, box_rect, is_selected)
             
             # Show garbage bag sprite
             garbage_sprite = GARBAGE_BAGS[name]
-            large_sprite = pygame.transform.scale(garbage_sprite, (80, 80))
-            sprite_rect = large_sprite.get_rect(center=(box_x + 80, y + 40))
+            large_sprite = pygame.transform.scale(garbage_sprite, (LARGE_SPRITE_SIZE, LARGE_SPRITE_SIZE))
+            sprite_rect = large_sprite.get_rect(center=(box_x + LARGE_SPRITE_SIZE, y + 40))
             screen.blit(large_sprite, sprite_rect)
             
             color = CYAN if is_selected else WHITE
@@ -1026,20 +1099,21 @@ def select_difficulty():
     while True:
         screen.fill(BLACK)
         title = font.render(GAME_NAMES['select_difficulty'], True, WHITE)
-        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, 150))
+        title_rect = title.get_rect(center=(WINDOW_WIDTH//2, NAME_INPUT_TITLE_Y))
         screen.blit(title, title_rect)
         
         for i, name in enumerate(options):
             difficulty_color = DIFFICULTY_COLORS[name]
+            y = DIFFICULTY_START_Y + i * DIFFICULTY_ITEM_SPACING
+            
             if i == selected:
                 # Draw box for selected difficulty
-                pygame.draw.rect(screen, DARK_GRAY, (WINDOW_WIDTH//2 - 130, 220 + i*50 - 20, 260, 40), 0, 10)
-                pygame.draw.rect(screen, difficulty_color, (WINDOW_WIDTH//2 - 130, 220 + i*50 - 20, 260, 40), 3, 10)
+                box_x = WINDOW_WIDTH//2 - DIFFICULTY_BOX_WIDTH//2
+                pygame.draw.rect(screen, DARK_GRAY, (box_x, y - DIFFICULTY_BOX_Y_OFFSET, DIFFICULTY_BOX_WIDTH, DIFFICULTY_BOX_HEIGHT), 0, 10)
+                pygame.draw.rect(screen, difficulty_color, (box_x, y - DIFFICULTY_BOX_Y_OFFSET, DIFFICULTY_BOX_WIDTH, DIFFICULTY_BOX_HEIGHT), 3, 10)
                 color = difficulty_color
             else:
                 color = difficulty_color
-                
-            y = 220 + i*50
             option = font.render(name, True, color)
             option_rect = option.get_rect(center=(WINDOW_WIDTH//2, y))
             screen.blit(option, option_rect)
@@ -1118,7 +1192,7 @@ def game_over_screen(score, difficulty_name):
         
         total_enter_width = enter_prefix.get_width() + enter_key.get_width() + enter_suffix.get_width()
         enter_start_x = (WINDOW_WIDTH - total_enter_width) // 2
-        enter_y = 350
+        enter_y = GAME_OVER_OPTION_Y_START
         
         screen.blit(enter_prefix, (enter_start_x, enter_y))
         screen.blit(enter_key, (enter_start_x + enter_prefix.get_width(), enter_y))
@@ -1131,7 +1205,7 @@ def game_over_screen(score, difficulty_name):
         
         total_s_width = s_prefix.get_width() + s_key.get_width() + s_suffix.get_width()
         s_start_x = (WINDOW_WIDTH - total_s_width) // 2
-        s_y = 380
+        s_y = GAME_OVER_OPTION_Y_START + GAME_OVER_OPTION_Y_SPACING
         
         screen.blit(s_prefix, (s_start_x, s_y))
         screen.blit(s_key, (s_start_x + s_prefix.get_width(), s_y))
@@ -1144,7 +1218,7 @@ def game_over_screen(score, difficulty_name):
         
         total_esc_width = esc_prefix.get_width() + esc_key.get_width() + esc_suffix.get_width()
         esc_start_x = (WINDOW_WIDTH - total_esc_width) // 2
-        esc_y = 410
+        esc_y = GAME_OVER_OPTION_Y_START + (GAME_OVER_OPTION_Y_SPACING * 2)
         
         screen.blit(esc_prefix, (esc_start_x, esc_y))
         screen.blit(esc_key, (esc_start_x + esc_prefix.get_width(), esc_y))
