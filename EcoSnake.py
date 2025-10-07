@@ -476,7 +476,8 @@ class Game:
         score = 0
         last_dir = (1, 0)
         frame_counter = 0
-        
+        pending_direction = None
+
         while True:
             # Handle input
             for event in pygame.event.get():
@@ -485,7 +486,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         return 'main_menu'
-                    
+
                     new_dir = None
                     if event.key == pygame.K_UP and last_dir != (0, 1):
                         new_dir = (0, -1)
@@ -495,19 +496,22 @@ class Game:
                         new_dir = (-1, 0)
                     elif event.key == pygame.K_RIGHT and last_dir != (-1, 0):
                         new_dir = (1, 0)
-                    
+
                     if new_dir:
-                        collector.dir_x, collector.dir_y = new_dir
-                        last_dir = new_dir
-            
+                        pending_direction = new_dir
+
             # Update game state
             frame_counter += 1
-            
+
             if frame_counter >= (TARGET_FPS // game_speed):
                 frame_counter = 0
                 old_tail = collector.squares[-1]
+                if pending_direction:
+                    collector.dir_x, collector.dir_y = pending_direction
+                    last_dir = pending_direction
+                    pending_direction = None
                 collector.move()
-                
+
                 # Check collision
                 if collector.check_collision():
                     choice = self.game_over_screen(score, difficulty_name)
