@@ -2,6 +2,8 @@
 
 *[English](#english) | [Türkçe](#türkçe)*
 
+---
+
 ## English
 
 ## 🎮 About the Game
@@ -10,69 +12,79 @@ EcoSnake is a fun and educational environmental protection game! Collect trash t
 
 This game is an educational Python game designed to develop environmental awareness. The player keeps the environment clean by collecting different types of trash. EcoSnake combines classic Snake game mechanics with an environmental protection theme.
 
-## 🚀 Installation and Running
+## 🚀 Installation
 
-### Requirements
-- Python 3.6 or higher
-- Pygame library
+###   Prerequisites
 
-### Step 1: Python Installation
+**Python 3.8 or higher** is required to run the game.
 
-**Windows:**
-1. Download Python from [Python.org](https://python.org)
-2. Run the downloaded file
-3. Check **"Add Python to PATH"** option
-4. Click "Install Now" button
+**Check if Python is installed:**
+- **Windows:** Open Command Prompt and type: `python --version`
+- **macOS/Linux:** Open Terminal and type: `python3 --version`
 
-**macOS:**
+**If Python is not installed:**
+- **Windows:** Download from [python.org](https://python.org/downloads/) ⚠️ Check "Add Python to PATH" during installation!
+- **macOS:** Download from [python.org](https://python.org/downloads/) or install via Homebrew: `brew install python3`
+- **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install python3 python3-pip`
+
+---
+
+### 📥 Download the Game
+
+Choose one of two methods:
+
+#### **Method 1: Download ZIP**
+
+1. 🌐 Go to [github.com/Sqap85/EcoSnake-Game](https://github.com/Sqap85/EcoSnake-Game)
+2. 🟢 Click the green **"Code"** button
+3. 📥 Select **"Download ZIP"**
+4. 📂 Extract the downloaded ZIP file to your Desktop (or anywhere you like)
+5. 📁 Open the extracted `EcoSnake-Game` folder
+
+#### **Method 2: Clone with Git**
+
+If you have Git installed:
+
+**Windows (Command Prompt):**
 ```bash
-# Installation with Homebrew (recommended)
-brew install python
-
-# Or download directly from Python.org
-```
-
-**Linux (Ubuntu/Debian):**
-```bash
-sudo apt update
-sudo apt install python3 python3-pip
-```
-
-### Step 2: Download the Project
-
-**Download with Git (recommended):**
-```bash
+cd Desktop
 git clone https://github.com/Sqap85/EcoSnake-Game.git
 cd EcoSnake-Game
 ```
 
-**Or download as ZIP:**
-1. Click the green **"Code"** button on GitHub page
-2. Select **"Download ZIP"** option
-3. Extract the downloaded file to a folder
-4. Navigate to that folder via Terminal/Command Prompt
-
-### Step 3: Pygame Installation
-
-Run this command in Terminal or Command Prompt:
-
+**macOS/Linux (Terminal):**
 ```bash
-pip install pygame
+cd ~/Desktop
+git clone https://github.com/Sqap85/EcoSnake-Game.git
+cd EcoSnake-Game
 ```
 
-**Note:** If `pip` command doesn't work, try:
-- Windows: `py -m pip install pygame`
-- macOS/Linux: `pip3 install pygame` or `python3 -m pip install pygame`
+---
 
-### Step 4: Start the Game
+### ⚡ Run the Game
 
+#### **Windows:**
+1. Open the `EcoSnake-Game` folder
+2. Double-click `start.bat` file - that's it! 🎮
+
+#### **macOS/Linux:**
+1. Open Terminal
+2. Navigate to the game folder and run:
 ```bash
-python EcoSnake.py
+cd ~/Desktop/EcoSnake-Game
+./start.sh
 ```
+*(Change the path if you extracted the game to a different location)*
 
-**Note:** If `python` command doesn't work:
-- Windows: `py EcoSnake.py`
-- macOS/Linux: `python3 EcoSnake.py`
+**Done!** The script automatically:
+- ✅ Checks if Python is installed
+- ✅ Creates virtual environment (first time only)
+- ✅ Installs Pygame (first time only)
+- ✅ Starts the game
+
+**Next time:** Just double-click `start.bat` (Windows) or run `./start.sh` (macOS/Linux) - instant play! 🎮
+
+---
 
 ## 🎯 How to Play?
 
@@ -127,92 +139,79 @@ EcoSnake eğlenceli ve eğitici bir çevre koruma oyunu! Çöpleri toplayarak do
 
 Bu oyun, çevre bilincini geliştirmek amacıyla tasarlanmış eğitici bir Python oyunudur. Oyuncu, farklı türdeki çöpleri toplayarak çevreyi temiz tutar. EcoSnake, klasik Yılan oyunu mekaniğini çevre koruma temasıyla birleştirir.
 
-## 🚀 Kurulum ve Çalıştırma
+## 🚀 Kurulum
 
-### Gereksinimler
+###  Ön Gereksinimler
 
-Oyunu çalıştırmak için aşağıdakiler gereklidir:
+**Python 3.8 veya daha yüksek** sürüm gereklidir.
 
-- Python 3.6 veya üzeri
-- Pygame kütüphanesi
+**Python kurulu mu kontrol edin:**
+- **Windows:** Komut İstemi'ni açın ve yazın: `python --version`
+- **macOS/Linux:** Terminal'i açın ve yazın: `python3 --version`
 
-### 1️⃣ Adım: Python Kurulumu
+**Eğer Python kurulu değilse:**
+- **Windows:** [python.org](https://python.org/downloads/) adresinden indirin ⚠️ Kurulum sırasında "Add Python to PATH" seçeneğini işaretleyin!
+- **macOS:** [python.org](https://python.org/downloads/) adresinden indirin veya Homebrew ile: `brew install python3`
+- **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install python3 python3-pip`
 
-**Windows:**
-1. [Python.org](https://python.org) adresinden Python'ı indirin
-2. İndirilen dosyayı çalıştırın
-3. **"Add Python to PATH"** seçeneğini işaretleyin
-4. "Install Now" butonuna tıklayın
+---
 
-**macOS:**
+###  📥 Oyunu İndirin
+
+İki yöntemden birini seçin:
+
+#### **Yöntem 1: ZIP İndir**
+
+1. 🌐 [github.com/Sqap85/EcoSnake-Game](https://github.com/Sqap85/EcoSnake-Game) adresine gidin
+2. 🟢 Yeşil **"Code"** butonuna tıklayın
+3. 📥 **"Download ZIP"** seçeneğini seçin
+4. 📂 İndirilen ZIP dosyasını Masaüstüne (veya istediğiniz yere) çıkarın
+5. 📁 Çıkan `EcoSnake-Game` klasörünü açın
+
+#### **Yöntem 2: Git ile Clone**
+
+Eğer Git kuruluysa:
+
+**Windows (Komut İstemi):**
 ```bash
-# Homebrew ile kurulum (önerilen)
-brew install python
-
-# Veya Python.org'dan direkt indirin
-```
-
-**Linux (Ubuntu/Debian):**
-```bash
-sudo apt update
-sudo apt install python3 python3-pip
-```
-
-### 2️⃣ Adım: Projeyi İndirin
-
-**Git ile indirin (önerilen):**
-```bash
+cd Desktop
 git clone https://github.com/Sqap85/EcoSnake-Game.git
 cd EcoSnake-Game
 ```
 
-**Veya ZIP olarak indirin:**
-1. GitHub sayfasında yeşil **"Code"** butonuna tıklayın
-2. **"Download ZIP"** seçeneğini seçin
-3. İndirilen dosyayı bir klasöre çıkarın
-4. Terminal/Komut İstemi ile o klasöre gidin
-
-### 3️⃣ Adım: Pygame Kurulumu
-
-Terminal veya komut isteminde şu komutu çalıştırın:
-
+**macOS/Linux (Terminal):**
 ```bash
-pip install pygame
+cd ~/Desktop
+git clone https://github.com/Sqap85/EcoSnake-Game.git
+cd EcoSnake-Game
 ```
 
-**Not:** Eğer `pip` komutu çalışmıyorsa şunları deneyin:
-- Windows: `py -m pip install pygame`
-- macOS/Linux: `pip3 install pygame` veya `python3 -m pip install pygame`
+---
 
-### 4️⃣ Adım: Oyunu Başlatın
+### ⚡ Oyunu Çalıştırın
 
+#### **Windows:**
+1. `EcoSnake-Game` klasörünü açın
+2. `start.bat` dosyasına çift tıklayın - bu kadar! 🎮
+
+#### **macOS/Linux:**
+1. Terminal'i açın
+2. Oyun klasörüne gidin ve çalıştırın:
 ```bash
-python EcoSnake.py
+cd ~/Desktop/EcoSnake-Game
+./start.sh
 ```
+*(Oyunu farklı bir yere çıkardıysanız yolu değiştirin)*
 
-**Not:** Eğer `python` komutu çalışmıyorsa:
-- Windows: `py EcoSnake.py`
-- macOS/Linux: `python3 EcoSnake.py`
+**Bitti!** Script otomatik olarak:
+- ✅ Python'un kurulu olup olmadığını kontrol eder
+- ✅ Sanal ortam oluşturur (sadece ilk seferde)
+- ✅ Pygame'i kurar (sadece ilk seferde)
+- ✅ Oyunu başlatır
 
-## 🎯 Nasıl Oynanır?
+**Bir dahaki sefere:** Sadece `start.bat` (Windows) veya `./start.sh` (macOS/Linux) çalıştırın - anında oyna! 🎮
 
-### Kontroller:
-- **↑ ↓ ← →** : Hareket için ok tuşlarını kullanın
-- **ENTER** : Seçim yapmak için
-- **ESC** : Ana menüye dönmek veya oyundan çıkmak için
-
-### Oyun Kuralları:
-1. **Hedef**: Çöpleri toplayarak puanınızı artırın
-2. **Hareket**: Ok tuşlarıyla karakterinizi yönlendirin
-3. **Çöp Toplama**: Çöplere dokunarak onları toplayın
-4. **Dikkat**: Kendi çöp poşetinize çarpmayın!
-5. **Büyüme**: Her çöp topladığınızda arkadaki poşet uzar
-
-### Zorluk Seviyeleri:
-- **Kolay**: Yavaş hareket, yeni başlayanlar için ideal
-- **Orta**: Normal hız, dengeli oyun deneyimi  
-- **Zor**: Hızlı hareket, deneyimli oyuncular için
-
+---
 
 ## 👥 Katkıda Bulunma
 
