@@ -47,14 +47,14 @@ If you have Git installed:
 
 **Windows (Command Prompt):**
 ```bash
-cd Desktop
+cd Desktop # change to the folder where you want to clone
 git clone https://github.com/Sqap85/EcoSnake-Game.git
 cd EcoSnake-Game
 ```
 
 **macOS/Linux (Terminal):**
 ```bash
-cd ~/Desktop
+cd ~/Desktop # change to the folder where you want to clone
 git clone https://github.com/Sqap85/EcoSnake-Game.git
 cd EcoSnake-Game
 ```
@@ -177,14 +177,14 @@ Eğer Git kuruluysa:
 
 **Windows (Komut İstemi):**
 ```bash
-cd Desktop
+cd Desktop # Kurmak istediğiniz yere gidin
 git clone https://github.com/Sqap85/EcoSnake-Game.git
 cd EcoSnake-Game
 ```
 
 **macOS/Linux (Terminal):**
 ```bash
-cd ~/Desktop
+cd ~/Desktop # Kurmak istediğiniz yere gidin
 git clone https://github.com/Sqap85/EcoSnake-Game.git
 cd EcoSnake-Game
 ```
