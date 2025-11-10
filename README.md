@@ -69,12 +69,15 @@ cd EcoSnake-Game
 
 #### **macOS/Linux:**
 1. Open Terminal
-2. Navigate to the game folder and run:
+2. Navigate to the game folder *(Change the path if you extracted the game to a different location)*
 ```bash
 cd ~/Desktop/EcoSnake-Game
+```
+3. Run the starter script
+```bash
 ./start.sh
 ```
-*(Change the path if you extracted the game to a different location)*
+
 
 **Done!** The script automatically:
 - ✅ Checks if Python is installed
@@ -196,12 +199,15 @@ cd EcoSnake-Game
 
 #### **macOS/Linux:**
 1. Terminal'i açın
-2. Oyun klasörüne gidin ve çalıştırın:
+2. Oyun klasörüne gidin *(Oyunu farklı bir yere çıkardıysanız yolu değiştirin)*
 ```bash
 cd ~/Desktop/EcoSnake-Game
+```
+3. Çalıştırın
+```bash
 ./start.sh
 ```
-*(Oyunu farklı bir yere çıkardıysanız yolu değiştirin)*
+
 
 **Bitti!** Script otomatik olarak:
 - ✅ Python'un kurulu olup olmadığını kontrol eder
