@@ -2,9 +2,9 @@
 REM EcoSnake Game - One-Click Launcher (Windows)
 
 cls
-echo ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-echo 🐍  EcoSnake Game Launcher
-echo ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+echo =========================================
+echo   EcoSnake Game Launcher
+echo =========================================
 echo.
 
 REM Check Python
@@ -12,7 +12,7 @@ python --version >nul 2>&1
 if %errorlevel% neq 0 (
     py --version >nul 2>&1
     if %errorlevel% neq 0 (
-        echo ❌ Python not found!
+        echo [ERROR] Python not found!
         echo.
         echo Please install Python: https://python.org
         pause
@@ -23,32 +23,32 @@ if %errorlevel% neq 0 (
     set PYTHON_CMD=python
 )
 
-echo ✅ Python found!
+echo [OK] Python found!
 %PYTHON_CMD% --version
 echo.
 
 REM Check if virtual environment exists
 if not exist .venv (
-    echo 📦 First time setup...
+    echo [SETUP] First time setup...
     echo.
     
     REM Create virtual environment
-    echo 🔧 Creating virtual environment...
+    echo [*] Creating virtual environment...
     %PYTHON_CMD% -m venv .venv
     
     REM Activate
     call .venv\Scripts\activate.bat
     
     REM Install Pygame
-    echo 📥 Installing Pygame...
+    echo [*] Installing Pygame...
     python -m pip install --quiet --upgrade pip
     python -m pip install --quiet pygame
     
     if %errorlevel% equ 0 (
-        echo ✅ Setup completed!
+        echo [OK] Setup completed!
         echo.
     ) else (
-        echo ❌ Setup failed!
+        echo [ERROR] Setup failed!
         pause
         exit /b 1
     )
@@ -58,9 +58,9 @@ if not exist .venv (
 )
 
 REM Start the game
-echo ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-echo 🎮 Starting game...
-echo ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+echo =========================================
+echo   Starting game...
+echo =========================================
 echo.
 
 python EcoSnake.py
